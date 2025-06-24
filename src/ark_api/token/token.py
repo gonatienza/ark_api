@@ -66,8 +66,8 @@ class Token(Api):
         return json_dict
 
     def save_keyring(self):
-        if system() == 'Windows':
-            raise Unsupported('Windows keyring is not supported')
+        if system() == "Windows":
+            raise Unsupported("Windows keyring is not supported")
         json_dict = self._get_json_dict()
         username = self._token.username
         keyring.set_password(
@@ -95,8 +95,8 @@ class Token(Api):
 
     @classmethod
     def from_keyring(cls, username):
-        if system() == 'Windows':
-            raise Unsupported('Windows keyring is not supported')
+        if system() == "Windows":
+            raise Unsupported("Windows keyring is not supported")
         assert isinstance(username, str), "username must be str"
         json_str = keyring.get_password(
             service_name=f"{cls.__name__}_{username}",
