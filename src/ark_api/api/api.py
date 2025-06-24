@@ -38,7 +38,7 @@ class Api(ABC):
             elif "application/json" in headers["Content-Type"]:
                 data = json.dumps(params).encode()
         else:
-            data = b''
+            data = b""
         req = request.Request(
             api_path,
             data=data,
