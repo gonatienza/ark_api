@@ -14,8 +14,8 @@ class ListScaPolicies(Api):
             "Authorization": f"Bearer {token}"
         }
         method = "GET"
-        self._policies = self._api_call(headers, params, api_path, method)
+        self._response = self._api_call(headers, params, api_path, method)
 
     @property
     def hits(self):
-        return self._policies.hits
+        return self._response.hits

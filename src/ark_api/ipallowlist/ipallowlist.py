@@ -18,25 +18,25 @@ class GetIpAllowList(Api):
         }
         method = "GET"
         params = None
-        self._ip_allow_list = self._api_call(
+        self._response = self._api_call(
             headers, params, api_path, method
         )
 
     @property
     def customerPublicIPs(self):
-        return self._ip_allow_list.customerPublicIPs
+        return self._response.customerPublicIPs
 
     @property
     def updateInProgress(self):
-        return self._ip_allow_list.updateInProgress
+        return self._response.updateInProgress
 
     @property
     def lastTaskId(self):
-        return self._ip_allow_list.lastTaskId
+        return self._response.lastTaskId
 
     @property
     def dateUpdated(self):
-        return self._ip_allow_list.dateUpdated
+        return self._response.dateUpdated
 
 
 class SetIpAllowList(Api):
@@ -51,14 +51,14 @@ class SetIpAllowList(Api):
         }
         method = "PUT"
         params = {'customerPublicIPs': ip_allow_list}
-        self._ip_allow_list = self._api_call(
+        self._response = self._api_call(
             headers, params, api_path, method
         )
 
     @property
     def taskId(self):
-        return self._ip_allow_list.taskId
+        return self._response.taskId
 
     @property
     def status(self):
-        return self._ip_allow_list.status
+        return self._response.status

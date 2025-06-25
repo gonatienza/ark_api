@@ -19,7 +19,7 @@ class APIError(ArkApiError):
     pass
 
 
-class SecretUsed(Exception):
+class SecretUsed(ArkApiError):
     """
     Secret Used Error
     """

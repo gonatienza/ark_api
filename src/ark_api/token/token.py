@@ -26,7 +26,6 @@ class Token(Api):
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         method = "POST"
         self._token = self._api_call(headers, params, api_path, method)
-        self._token.username = username
         now_dt = datetime.now()
         delta_dt = timedelta(seconds=self._token.expires_in)
         del self._token.expires_in
@@ -41,16 +40,8 @@ class Token(Api):
         return True
 
     @property
-    def username(self):
-        return self._token.username
-
-    @property
     def access_token(self):
         return self._token.access_token
-
-    @property
-    def token_type(self):
-        return self._token.token_type
 
     @property
     def expires_on(self):
@@ -58,20 +49,17 @@ class Token(Api):
 
     def _get_json_dict(self):
         json_dict = {
-            "username": self._token.username,
             "access_token": self._token.access_token,
-            "token_type": self._token.token_type,
             "expires_on": self._token.expires_on
         }
         return json_dict
 
-    def save_keyring(self):
+    def save_keyring(self, username):
         if system() == "Windows":
             raise Unsupported("Windows keyring is not supported")
         json_dict = self._get_json_dict()
-        username = self._token.username
         keyring.set_password(
-            service_name=f"{self.__class__.__name__}_{username}",
+            service_name=self.__class__.__module__,
             username=username,
             password=json.dumps(json_dict)
         )
@@ -99,13 +87,13 @@ class Token(Api):
             raise Unsupported("Windows keyring is not supported")
         assert isinstance(username, str), "username must be str"
         json_str = keyring.get_password(
-            service_name=f"{cls.__name__}_{username}",
+            service_name=cls.__module__,
             username=username
         )
         if json_str:
             return cls._from_json_string(json_str)
         else:
-            raise KeyError("No keyring found")
+            raise LookupError("No keyring found")
 
     @classmethod
     def from_file(cls, file):
@@ -120,9 +108,7 @@ class Token(Api):
     def from_str(cls, access_token):
         assert isinstance(access_token, str), "token must be str"
         json_dict = {
-            "username": None,
             "access_token": access_token,
-            "token_type": None,
             "expires_on": None
         }
         return cls._from_json_string(json.dumps(json_dict))
