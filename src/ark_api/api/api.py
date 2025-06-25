@@ -2,7 +2,6 @@ from ark_api.exceptions import APIError
 from ark_api.utils import SecretStr
 from abc import ABC, abstractmethod
 from urllib import request, parse
-from urllib.error import URLError
 import json
 
 
@@ -51,22 +50,6 @@ class Api(ABC):
             res_str = res_bytes.decode()
             res_dict = json.loads(res_str)
             return ApiResponse(res_dict)
-        except URLError as e:
-            if params:
-                _params = {
-                    key: value
-                    if not isinstance(value, SecretStr) else "*****"
-                    for key, value in params.items()
-                }
-            else:
-                _params = None
-            raise APIError(
-                f"\nerror: {str(e)}"
-                f"\napi_path: '{api_path}'"
-                f"\nheaders: {headers}"
-                f"\nmethod: '{method}'"
-                f"\nparams: {_params}"
-            )
         except Exception as e:
             if params:
                 _params = {
@@ -76,11 +59,17 @@ class Api(ABC):
                 }
             else:
                 _params = None
-            raise APIError(
-                f"\nerror: {str(e)}"
-                f"\nresponse: {e.read().decode()}"
-                f"\napi_path: '{api_path}'"
-                f"\nheaders: {headers}"
-                f"\nmethod: '{method}'"
-                f"\nparams: {_params}"
-            )
+            message_list = [
+                f"error: {str(e)}",
+                f"api_path: '{api_path}'",
+                f"headers: {headers}",
+                f"method: '{method}'",
+                f"params: {_params}"
+            ]
+            if hasattr(e, "read"):
+                try:
+                    response = e.read().decode()
+                except Exception:
+                    response = '<unreadable>'
+                message_list.append(f"response: {response}")
+            raise APIError("\n".join(message_list))
