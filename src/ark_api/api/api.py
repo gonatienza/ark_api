@@ -70,6 +70,6 @@ class Api(ABC):
                 try:
                     response = e.read().decode()
                 except Exception:
-                    response = '<unreadable>'
+                    response = "<unreadable>"
                 message_list.append(f"response: {response}")
             raise APIError("\n".join(message_list))
