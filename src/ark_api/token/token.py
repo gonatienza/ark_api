@@ -1,4 +1,4 @@
-from ark_api.api import Api, ApiResponse
+from ark_api.api import Api, ArkResponse
 from ark_api.discovery import Discovery
 from ark_api.exceptions import ExpiredToken, Unsupported
 from ark_api.utils import Secret
@@ -71,7 +71,7 @@ class Token(Api):
 
     @classmethod
     def _from_json_string(cls, json_str):
-        token = ApiResponse(json.loads(json_str))
+        token = ArkResponse(json.loads(json_str))
         if token.expires_on:
             expires_on_dt = datetime.fromtimestamp(token.expires_on)
             now_dt = datetime.now()

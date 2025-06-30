@@ -5,22 +5,22 @@ from urllib import request, parse
 import json
 
 
-class EmbeddedObject:
+class ArkObject:
     def __init__(self, attributes):
         assert isinstance(attributes, dict)
         for key, value in attributes.items():
             if isinstance(value, dict):
-                setattr(self, key, EmbeddedObject(value))
+                setattr(self, key, ArkObject(value))
             else:
                 setattr(self, key, value)
 
 
-class ApiResponse:
+class ArkResponse:
     def __init__(self, attributes):
         assert isinstance(attributes, dict)
         for key, value in attributes.items():
             if isinstance(value, dict):
-                setattr(self, key, EmbeddedObject(value))
+                setattr(self, key, ArkObject(value))
             else:
                 setattr(self, key, value)
 
@@ -49,7 +49,7 @@ class Api(ABC):
             res_bytes = res.read()
             res_str = res_bytes.decode()
             res_dict = json.loads(res_str)
-            return ApiResponse(res_dict)
+            return ArkResponse(res_dict)
         except Exception as e:
             if params:
                 _params = {
