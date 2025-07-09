@@ -9,7 +9,7 @@ import keyring
 import os
 
 
-class ArkToken(Api):
+class _ArkToken(Api):
     def __init__(self, api_path, username, password):
         assert isinstance(api_path, str), "api_path must be str"
         assert isinstance(username, str), "username must be str"
@@ -98,7 +98,7 @@ class ArkToken(Api):
         return cls.from_string(access_token)
 
 
-class Token(ArkToken):
+class Token(_ArkToken):
     _API_PATH_FORMAT = "{}/oauth2/platformtoken"
     _WINDOWS_KEYRING_SUPPORTED = False
 
@@ -109,7 +109,7 @@ class Token(ArkToken):
         super().__init__(api_path, username, password)
 
 
-class AppToken(ArkToken):
+class AppToken(_ArkToken):
     _API_PATH_FORMAT = "{}/oauth2/token/{}"
     _WINDOWS_KEYRING_SUPPORTED = True
 
