@@ -3,6 +3,5 @@ from .exceptions import (
     ArkApiError,
     ExpiredToken,
     APIError,
-    SecretUsed,
-    Unsupported
+    SecretUsed
 )

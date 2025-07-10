@@ -16,7 +16,7 @@ class CreateScaPolicy(Api):
             "Authorization": f"Bearer {token}"
         }
         method = "POST"
-        self._response = self._api_call(headers, params, api_path, method)
+        self._response = self.api_call(headers, params, api_path, method)
 
     @property
     def job_id(self):
