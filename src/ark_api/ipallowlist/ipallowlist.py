@@ -18,7 +18,7 @@ class GetIpAllowList(Api):
         }
         method = "GET"
         params = None
-        self._response = self._api_call(
+        self._response = self.api_call(
             headers, params, api_path, method
         )
 
@@ -51,7 +51,7 @@ class SetIpAllowList(Api):
         }
         method = "PUT"
         params = {'customerPublicIPs': ip_allow_list}
-        self._response = self._api_call(
+        self._response = self.api_call(
             headers, params, api_path, method
         )
 

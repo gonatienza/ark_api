@@ -1,6 +1,6 @@
 # ark_api
 
-A simple unofficial Cyberark API Collection
+My simple unofficial CyberArk API Collection
 
 ## Installation
 

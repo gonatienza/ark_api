@@ -24,10 +24,3 @@ class SecretUsed(ArkApiError):
     Secret Used Error
     """
     pass
-
-
-class Unsupported(Exception):
-    """
-    Unsupported
-    """
-    pass
