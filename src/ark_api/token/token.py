@@ -4,7 +4,6 @@ from ark_api.discovery import Discovery
 
 class Token(_ArkToken):
     _API_PATH_FORMAT = "{}/oauth2/platformtoken"
-    _WINDOWS_KEYRING_SUPPORTED = False
 
     def __init__(self, subdomain, username, password):
         assert isinstance(subdomain, str), "subdomain must be str"
