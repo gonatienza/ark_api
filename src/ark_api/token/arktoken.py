@@ -7,7 +7,7 @@ import jwt
 import os
 
 
-class _ArkToken(Api):
+class ArkToken(Api):
     @abstractmethod
     def __init__(self):
         pass
