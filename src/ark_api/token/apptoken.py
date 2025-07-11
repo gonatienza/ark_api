@@ -4,7 +4,7 @@ from ark_api.discovery import Discovery
 from base64 import b64encode
 
 
-class Oauth2Token(ArkToken):
+class AppToken(ArkToken):
     _API_PATH_FORMAT = "{}/oauth2/token/{}"
 
     def __init__(self, app_id, scope, subdomain, username, password):
