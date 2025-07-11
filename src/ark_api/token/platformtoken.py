@@ -1,9 +1,9 @@
-from ._arktoken import _ArkToken
+from .arktoken import ArkToken
 from ark_api.utils import Secret
 from ark_api.discovery import Discovery
 
 
-class PlatformToken(_ArkToken):
+class PlatformToken(ArkToken):
     _API_PATH_FORMAT = "{}/oauth2/platformtoken"
 
     def __init__(self, subdomain, username, password):

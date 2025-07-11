@@ -1,10 +1,10 @@
-from ._arktoken import _ArkToken
+from .arktoken import ArkToken
 from ark_api.utils import Secret
 from ark_api.discovery import Discovery
 from base64 import b64encode
 
 
-class Oauth2Token(_ArkToken):
+class Oauth2Token(ArkToken):
     _API_PATH_FORMAT = "{}/oauth2/token/{}"
 
     def __init__(self, app_id, scope, subdomain, username, password):
