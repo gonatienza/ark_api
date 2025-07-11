@@ -1,4 +1,5 @@
 from ark_api.api import Api
+from ark_api.utils import Secret
 
 
 class SafeMembers(Api):
@@ -13,9 +14,10 @@ class SafeMembers(Api):
         assert isinstance(safe_url_id, str), "safe_name must be str"
         api_path = self._API_PATH_FORMAT.format(subdomain, safe_url_id)
         params = {"safeUrlId": safe_url_id}
+        authorization = Secret(f"Bearer {token}")
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}"
+            "Authorization": authorization.use()
         }
         method = "GET"
         self._response = self.api_call(headers, params, api_path, method)

@@ -1,4 +1,5 @@
 from ark_api.api import Api
+from ark_api.utils import Secret
 
 
 class Safes(Api):
@@ -14,9 +15,10 @@ class Safes(Api):
             "includeAccounts": True,
             "extendedDetails": True
         }
+        authorization = Secret(f"Bearer {token}")
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}"
+            "Authorization": authorization.use()
         }
         method = "GET"
         self._response = self.api_call(headers, params, api_path, method)
