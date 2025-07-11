@@ -25,7 +25,7 @@ class Api(ABC):
         pass
 
     @staticmethod
-    def api_call(headers, params, api_path, method):
+    def api_call(api_path, method, headers, params):
         if params:
             if "x-www-form-urlencoded" in headers["Content-Type"]:
                 data = parse.urlencode(params).encode()
