@@ -1,5 +1,5 @@
 from ark_api.exceptions import APIError
-from ark_api.utils import SecretStr
+from ark_api.utils import mask_secrets_from_dict
 from abc import ABC, abstractmethod
 from urllib import request, parse
 import json
@@ -47,17 +47,14 @@ class Api(ABC):
             return ArkResponse(res_dict)
         except Exception as e:
             if params:
-                _params = {
-                    key: value
-                    if not isinstance(value, SecretStr) else "*****"
-                    for key, value in params.items()
-                }
+                _params = mask_secrets_from_dict(params)
             else:
                 _params = None
+            _headers = mask_secrets_from_dict(headers)
             message_list = [
                 f"error: {str(e)}",
                 f"api_path: '{api_path}'",
-                f"headers: {headers}",
+                f"headers: {_headers}",
                 f"method: '{method}'",
                 f"params: {_params}"
             ]

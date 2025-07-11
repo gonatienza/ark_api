@@ -1,6 +1,6 @@
 from ark_api.api import Api, ArkObject
-from ark_api.utils import Secret
 from ark_api.exceptions import ExpiredToken
+from abc import abstractmethod
 from time import time
 import keyring
 import jwt
@@ -8,20 +8,9 @@ import os
 
 
 class _ArkToken(Api):
-    def __init__(self, api_path, username, password):
-        assert isinstance(api_path, str), "api_path must be str"
-        assert isinstance(username, str), "username must be str"
-        assert isinstance(password, Secret), "password must be Secret"
-        params = {
-            "grant_type": "client_credentials",
-            "client_id": username,
-            "client_secret": password.use()
-        }
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        method = "POST"
-        self._response = self.api_call(headers, params, api_path, method)
-        self._access_token = self._response.access_token
-        self._jwt = self._get_unverified_claims(self._access_token)
+    @abstractmethod
+    def __init__(self):
+        pass
 
     @staticmethod
     def _get_unverified_claims(_jwt):

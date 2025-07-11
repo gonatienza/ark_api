@@ -1,4 +1,5 @@
 from ark_api.api import Api
+from ark_api.utils import Secret
 
 
 class CreateScaPolicy(Api):
@@ -11,9 +12,10 @@ class CreateScaPolicy(Api):
         assert isinstance(subdomain, str), "subdomain must be str"
         assert isinstance(params, dict), "params must be dict"
         api_path = self._API_PATH_FORMAT.format(subdomain)
+        authorization = Secret(f"Bearer {token}")
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}"
+            "Authorization": authorization.use()
         }
         method = "POST"
         self._response = self.api_call(headers, params, api_path, method)
