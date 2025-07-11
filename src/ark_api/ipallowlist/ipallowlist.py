@@ -18,9 +18,7 @@ class GetIpAllowList(Api):
         }
         method = "GET"
         params = None
-        self._response = self.api_call(
-            headers, params, api_path, method
-        )
+        self._response = self.api_call(api_path, method, headers, params)
 
     @property
     def customerPublicIPs(self):
@@ -51,9 +49,7 @@ class SetIpAllowList(Api):
         }
         method = "PUT"
         params = {'customerPublicIPs': ip_allow_list}
-        self._response = self.api_call(
-            headers, params, api_path, method
-        )
+        self._response = self.api_call(api_path, method, headers, params)
 
     @property
     def taskId(self):

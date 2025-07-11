@@ -19,6 +19,6 @@ class PlatformToken(_ArkToken):
         }
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         method = "POST"
-        self._response = self.api_call(headers, params, api_path, method)
+        self._response = self.api_call(api_path, method, headers, params)
         self._access_token = self._response.access_token
         self._jwt = self._get_unverified_claims(self._access_token)

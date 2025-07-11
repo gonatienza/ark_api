@@ -20,7 +20,7 @@ class SafeMembers(Api):
             "Authorization": authorization.use()
         }
         method = "GET"
-        self._response = self.api_call(headers, params, api_path, method)
+        self._response = self.api_call(api_path, method, headers, params)
 
     @property
     def value(self):
