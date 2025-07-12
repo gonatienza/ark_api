@@ -1,4 +1,5 @@
-from ark_api.api import Api, ArkObject
+from ark_api.api import Api
+from ark_api.utils import ArkObject
 from ark_api.exceptions import ExpiredToken
 from abc import abstractmethod
 from time import time

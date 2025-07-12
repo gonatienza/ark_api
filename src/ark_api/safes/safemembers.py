@@ -9,12 +9,12 @@ class SafeMembers(Api):
     )
 
     def __init__(self, token, subdomain, safe_url_id):
-        assert isinstance(token, str), "token must be str"
+        assert isinstance(token, Secret), "token must be Secret"
         assert isinstance(subdomain, str), "subdomain must be str"
         assert isinstance(safe_url_id, str), "safe_name must be str"
         api_path = self._API_PATH_FORMAT.format(subdomain, safe_url_id)
         params = {"safeUrlId": safe_url_id}
-        authorization = Secret(f"Bearer {token}")
+        authorization = Secret(f"Bearer {token.use()}")
         headers = {
             "Content-Type": "application/json",
             "Authorization": authorization.use()
