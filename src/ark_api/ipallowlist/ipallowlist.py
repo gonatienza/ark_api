@@ -1,4 +1,5 @@
 from ark_api.api import Api
+from ark_api.utils import Secret
 
 
 _API_PATH_FORMAT = (
@@ -9,12 +10,12 @@ _API_PATH_FORMAT = (
 
 class GetIpAllowList(Api):
     def __init__(self, token, subdomain):
-        assert isinstance(token, str), "token must be Secret"
+        assert isinstance(token, Secret), "token must be Secret"
         assert isinstance(subdomain, str), "subdomain must be str"
         api_path = _API_PATH_FORMAT.format(subdomain)
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}"
+            "Authorization": f"Bearer {token.use()}"
         }
         method = "GET"
         params = None
