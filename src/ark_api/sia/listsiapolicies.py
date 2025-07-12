@@ -6,11 +6,11 @@ class ListSiaPolicies(Api):
     _API_PATH_FORMAT = "https://{}.dpa.cyberark.cloud/api/access-policies"
 
     def __init__(self, token, subdomain):
-        assert isinstance(token, str), "token must be str"
+        assert isinstance(token, Secret), "token must be Secret"
         assert isinstance(subdomain, str), "subdomain must be str"
         api_path = self._API_PATH_FORMAT.format(subdomain)
         params = {}
-        authorization = Secret(f"Bearer {token}")
+        authorization = Secret(f"Bearer {token.use()}")
         headers = {
             "Content-Type": "application/json",
             "Authorization": authorization.use()

@@ -13,7 +13,8 @@ pip install git+https://github.com/gonatienza/ark_api
 ### Example:
 
 ```
-from ark_api.token import Secret, PlatformToken
+from ark_api.utils import Secret
+from ark_api.token import PlatformToken
 from ark_api.safes import Safes
 from getpass import getpass
 
@@ -24,5 +25,5 @@ password = Secret(
    getpass(f'{username} Password: ')
 )
 token = PlatformToken(subdomain, username, password)
-safes = Safes(token.access_token, subdomain)
+safes = Safes(Secret(token.access_token), subdomain)
 ```

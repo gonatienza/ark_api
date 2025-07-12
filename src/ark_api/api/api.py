@@ -1,22 +1,8 @@
 from ark_api.exceptions import APIError
-from ark_api.utils import mask_secrets_from_dict
+from ark_api.utils import ArkObject, mask_secrets_from_dict
 from abc import ABC, abstractmethod
 from urllib import request, parse
 import json
-
-
-class ArkObject:
-    def __init__(self, attributes):
-        assert isinstance(attributes, dict)
-        for key, value in attributes.items():
-            if isinstance(value, dict):
-                setattr(self, key, ArkObject(value))
-            else:
-                setattr(self, key, value)
-
-
-class ArkResponse(ArkObject):
-    pass
 
 
 class Api(ABC):
@@ -44,7 +30,7 @@ class Api(ABC):
             res_bytes = res.read()
             res_str = res_bytes.decode()
             res_dict = json.loads(res_str)
-            return ArkResponse(res_dict)
+            return ArkObject(res_dict)
         except Exception as e:
             if params:
                 _params = mask_secrets_from_dict(params)
