@@ -32,5 +32,5 @@ class Bearer(FlowAuthentication):
 
 class ApiKey(FlowAuthentication):
     def __init__(self, api_key):
-        assert isinstance(api_key, Secret), "pasapi_keysword must be Secret"
+        assert isinstance(api_key, Secret), "api_key must be Secret"
         self._headers = {"apikey": api_key.use()}
