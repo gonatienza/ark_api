@@ -4,7 +4,6 @@ from urllib.parse import urlparse
 
 
 class Flow(Api):
-    _PLAY_PATH = "play"
     _STOP_PATH = "stop"
     _STATUS_PATH = "status"
 
@@ -41,8 +40,7 @@ class Flow(Api):
         )
 
     def play(self):
-        url = f"{self._flow_url}/{self._PLAY_PATH}"
-        response = self._call_flow(url)
+        response = self._call_flow(self._play_flow_url)
         self._run_id = response.run_id
         self._started = True
         return response
