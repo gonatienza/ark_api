@@ -1,36 +1,42 @@
+from ark_api.token import PlatformToken
 from ark_api.utils import Secret
 from base64 import b64encode
 from abc import ABC, abstractmethod
 
 
-class FlowAuthentication(ABC):
+class ArkAuthorization(ABC):
     @abstractmethod
     def __init__(self):
         pass
 
     @property
-    def headers(self):
-        return self._headers
+    def header(self):
+        return self._header
 
 
-class Basic(FlowAuthentication):
+class Basic(ArkAuthorization):
     def __init__(self, username, password):
         assert isinstance(username, str), "username must be str"
         assert isinstance(password, Secret), "password must be Secret"
         creds = f"{username}:{password.use()}"
         encoded_creds = b64encode(creds.encode())
         authorization = Secret(f"Basic {encoded_creds.decode()}")
-        self._headers = {"Authorization": authorization.use()}
+        self._header = {"Authorization": authorization.use()}
 
 
-class Bearer(FlowAuthentication):
+class Bearer(ArkAuthorization):
     def __init__(self, token):
-        assert isinstance(token, Secret), "token must be Secret"
-        authorization = Secret(f"Bearer {token.use()}")
-        self._headers = {"Authorization": authorization.use()}
+        assert isinstance(token, PlatformToken), "token must be PlatformToken"
+        self._token = token
+        authorization = Secret(f"Bearer {self._token.access_token}")
+        self._header = {"Authorization": authorization.use()}
+
+    @property
+    def token(self):
+        return self._token
 
 
-class ApiKey(FlowAuthentication):
+class ApiKey(ArkAuthorization):
     def __init__(self, api_key):
         assert isinstance(api_key, Secret), "api_key must be Secret"
-        self._headers = {"apikey": api_key.use()}
+        self._header = {"apikey": api_key.use()}

@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.utils import Secret
+from ark_api.authorization import Bearer
 
 
 class CreateScaPolicy(Api):
@@ -7,15 +7,13 @@ class CreateScaPolicy(Api):
         "https://{}.sca.cyberark.cloud/api/policies/create-policy"
     )
 
-    def __init__(self, token, subdomain, params):
-        assert isinstance(token, Secret), "token must be Secret"
-        assert isinstance(subdomain, str), "subdomain must be str"
+    def __init__(self, auth, params):
+        assert isinstance(auth, Bearer), "auth must be Bearer"
         assert isinstance(params, dict), "params must be dict"
-        api_path = self._API_PATH_FORMAT.format(subdomain)
-        authorization = Secret(f"Bearer {token.use()}")
+        api_path = self._API_PATH_FORMAT.format(auth.token.jwt.subdomain)
         headers = {
-            "Content-Type": "application/json",
-            "Authorization": authorization.use()
+            **auth.header,
+            "Content-Type": "application/json"
         }
         method = "POST"
         self._response = self.api_call(api_path, method, headers, params)
