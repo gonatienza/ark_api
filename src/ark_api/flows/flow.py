@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from .flowauthentication import FlowAuthentication
+from ark_api.authorization import ArkAuthorization
 from urllib.parse import urlparse
 
 
@@ -7,12 +7,12 @@ class Flow(Api):
     _STOP_PATH = "stop"
     _STATUS_PATH = "status"
 
-    def __init__(self, flow_url, flow_authentication):
-        assert isinstance(flow_url, str), "flow_url must be str"
-        assert isinstance(flow_authentication, FlowAuthentication), (
-            "flow_authentication must be FlowAuthentication"
+    def __init__(self, auth, flow_url):
+        assert isinstance(auth, ArkAuthorization), (
+            "authorization must be ArkAuthorization"
         )
-        self._flow_authentication = flow_authentication
+        assert isinstance(flow_url, str), "flow_url must be str"
+        self._auth = auth
         self._play_flow_url = flow_url
         parsed = urlparse(self._play_flow_url)
         parsed_path_parts = parsed.path.split("/")
@@ -35,7 +35,7 @@ class Flow(Api):
         return self.api_call(
             url,
             "GET",
-            self._flow_authentication.headers,
+            self._auth.header,
             None
         )
 

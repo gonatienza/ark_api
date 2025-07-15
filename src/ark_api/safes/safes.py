@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.utils import Secret
+from ark_api.authorization import Bearer
 
 
 class Safes(Api):
@@ -7,18 +7,16 @@ class Safes(Api):
         "https://{}.privilegecloud.cyberark.cloud/PasswordVault/API/Safes/"
     )
 
-    def __init__(self, token, subdomain):
-        assert isinstance(token, Secret), "token must be Secret"
-        assert isinstance(subdomain, str), "subdomain must be str"
-        api_path = self._API_PATH_FORMAT.format(subdomain)
+    def __init__(self, auth):
+        assert isinstance(auth, Bearer), "auth must be Bearer"
+        api_path = self._API_PATH_FORMAT.format(auth.token.jwt.subdomain)
         params = {
             "includeAccounts": True,
             "extendedDetails": True
         }
-        authorization = Secret(f"Bearer {token.use()}")
         headers = {
-            "Content-Type": "application/json",
-            "Authorization": authorization.use()
+            **auth.header,
+            "Content-Type": "application/json"
         }
         method = "GET"
         self._response = self.api_call(api_path, method, headers, params)

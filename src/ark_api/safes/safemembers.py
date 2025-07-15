@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.utils import Secret
+from ark_api.authorization import Bearer
 
 
 class SafeMembers(Api):
@@ -8,16 +8,17 @@ class SafeMembers(Api):
         "PasswordVault/API/Safes/{}/Members/"
     )
 
-    def __init__(self, token, subdomain, safe_url_id):
-        assert isinstance(token, Secret), "token must be Secret"
-        assert isinstance(subdomain, str), "subdomain must be str"
+    def __init__(self, auth, safe_url_id):
+        assert isinstance(auth, Bearer), "auth must be Bearer"
         assert isinstance(safe_url_id, str), "safe_name must be str"
-        api_path = self._API_PATH_FORMAT.format(subdomain, safe_url_id)
+        api_path = self._API_PATH_FORMAT.format(
+            auth.token.jwt.subdomain,
+            safe_url_id
+        )
         params = {"safeUrlId": safe_url_id}
-        authorization = Secret(f"Bearer {token.use()}")
         headers = {
-            "Content-Type": "application/json",
-            "Authorization": authorization.use()
+            **auth.header,
+            "Content-Type": "application/json"
         }
         method = "GET"
         self._response = self.api_call(api_path, method, headers, params)

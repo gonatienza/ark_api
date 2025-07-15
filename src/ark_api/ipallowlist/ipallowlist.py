@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.utils import Secret
+from ark_api.authorization import Bearer
 
 
 _API_PATH_FORMAT = (
@@ -9,13 +9,12 @@ _API_PATH_FORMAT = (
 
 
 class GetIpAllowList(Api):
-    def __init__(self, token, subdomain):
-        assert isinstance(token, Secret), "token must be Secret"
-        assert isinstance(subdomain, str), "subdomain must be str"
-        api_path = _API_PATH_FORMAT.format(subdomain)
+    def __init__(self, auth):
+        assert isinstance(auth, Bearer), "auth must be Bearer"
+        api_path = _API_PATH_FORMAT.format(auth.token.jwt.subdomain)
         headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {token.use()}"
+            **auth.header,
+            "Content-Type": "application/json"
         }
         method = "GET"
         params = None
@@ -39,14 +38,13 @@ class GetIpAllowList(Api):
 
 
 class SetIpAllowList(Api):
-    def __init__(self, token, subdomain, ip_allow_list):
-        assert isinstance(token, str), "token must be Secret"
-        assert isinstance(subdomain, str), "subdomain must be str"
+    def __init__(self, auth, ip_allow_list):
+        assert isinstance(auth, Bearer), "auth must be Bearer"
         assert isinstance(ip_allow_list, list), "ip_allow_list must be list"
-        api_path = _API_PATH_FORMAT.format(subdomain)
+        api_path = _API_PATH_FORMAT.format(auth.token.jwt.subdomain)
         headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}"
+            **auth.header,
+            "Content-Type": "application/json"
         }
         method = "PUT"
         params = {'customerPublicIPs': ip_allow_list}
