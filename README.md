@@ -6,7 +6,9 @@ My simple unofficial CyberArk API Collection
 
 ```
 pip install git+https://github.com/gonatienza/ark_api
+```
 or
+```
 pip install https://github.com/gonatienza/ark_api/archive/refs/tags/latest.tar.gz
 ```
 
