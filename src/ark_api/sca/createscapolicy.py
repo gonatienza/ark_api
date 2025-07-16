@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.authorization import Bearer
+from ark_api.utils import verify
 
 
 class CreateScaPolicy(Api):
@@ -8,8 +8,8 @@ class CreateScaPolicy(Api):
     )
 
     def __init__(self, auth, params):
-        assert isinstance(auth, Bearer), "auth must be Bearer"
-        assert isinstance(params, dict), "params must be dict"
+        verify(auth, "PlatformBearer", "auth must be PlatformBearer")
+        verify(params, "dict", "params must be dict")
         api_path = self._API_PATH_FORMAT.format(auth.token.jwt.subdomain)
         headers = {
             **auth.header,

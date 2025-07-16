@@ -10,9 +10,18 @@ class Api(ABC):
     def __init__(self):
         pass
 
+    @classmethod
+    def api_call(cls, api_path, method, headers, params):
+        res = cls._api_call(api_path, method, headers, params)
+        res_bytes = res.read()
+        res_str = res_bytes.decode()
+        res_dict = json.loads(res_str)
+        return ArkObject(res_dict)
+
     @staticmethod
-    def api_call(api_path, method, headers, params):
+    def _api_call(api_path, method, headers, params):
         if params:
+            assert "Content-Type" in headers, "Content-Type required"
             if "x-www-form-urlencoded" in headers["Content-Type"]:
                 data = parse.urlencode(params).encode()
             elif "application/json" in headers["Content-Type"]:
@@ -27,10 +36,7 @@ class Api(ABC):
         )
         try:
             res = request.urlopen(req)
-            res_bytes = res.read()
-            res_str = res_bytes.decode()
-            res_dict = json.loads(res_str)
-            return ArkObject(res_dict)
+            return res
         except Exception as e:
             if params:
                 _params = mask_secrets_from_dict(params)
