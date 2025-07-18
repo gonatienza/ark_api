@@ -1,7 +1,7 @@
 from .arktoken import ArkToken
 from ark_api.utils import verify
 from ark_api.discovery import Discovery
-from ark_api.authorization import Basic, Bearer
+from ark_api.authorization import Basic, AppBearer
 
 
 class AppToken(ArkToken):
@@ -50,7 +50,7 @@ class AppToken(ArkToken):
         self._jwt = self._get_unverified_claims(self._access_token)
 
     def introspect(self):
-        auth = Bearer(self)
+        auth = AppBearer(self)
         headers = {
             **auth.header,
             "Content-Type": "application/x-www-form-urlencoded"
