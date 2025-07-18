@@ -1,4 +1,4 @@
-from ark_api.utils import SecretStr
+from .secret import SecretStr
 
 
 def verify(obj, class_name, error_message):
