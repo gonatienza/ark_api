@@ -1,4 +1,5 @@
 from ark_api.api import Api
+from ark_api.utils import verify
 
 
 class Discovery(Api):
@@ -8,7 +9,7 @@ class Discovery(Api):
     )
 
     def __init__(self, subdomain):
-        assert isinstance(subdomain, str), "subdomain must be str"
+        verify(subdomain, "str", "subdomain must be str")
         api_path = self._API_PATH_FORMAT.format(subdomain)
         headers = {"Content-Type": "application/json"}
         params = None

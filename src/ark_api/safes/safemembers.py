@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.authorization import Bearer
+from ark_api.utils import verify
 
 
 class SafeMembers(Api):
@@ -9,8 +9,8 @@ class SafeMembers(Api):
     )
 
     def __init__(self, auth, safe_url_id):
-        assert isinstance(auth, Bearer), "auth must be Bearer"
-        assert isinstance(safe_url_id, str), "safe_name must be str"
+        verify(auth, "PlatformBearer", "auth must be PlatformBearer")
+        verify(safe_url_id, "str", "safe_name must be str")
         api_path = self._API_PATH_FORMAT.format(
             auth.token.jwt.subdomain,
             safe_url_id

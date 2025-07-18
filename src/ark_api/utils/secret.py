@@ -3,6 +3,7 @@ from ark_api.exceptions import SecretUsed
 
 class Secret:
     def __init__(self, value):
+        assert isinstance(value, str), "value must be str"
         self._value = SecretStr.from_str(value)
         self._used = False
 
@@ -19,5 +20,5 @@ class Secret:
 class SecretStr(str):
     @classmethod
     def from_str(cls, value):
-        assert isinstance(value, str)
+        assert isinstance(value, str), "value must be str"
         return cls(value)

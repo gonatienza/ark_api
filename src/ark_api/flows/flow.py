@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.authorization import ArkAuthorization
+from ark_api.utils import verify
 from urllib.parse import urlparse
 
 
@@ -8,10 +8,12 @@ class Flow(Api):
     _STATUS_PATH = "status"
 
     def __init__(self, auth, flow_url):
-        assert isinstance(auth, ArkAuthorization), (
+        verify(
+            auth,
+            "ArkAuthorization",
             "authorization must be ArkAuthorization"
         )
-        assert isinstance(flow_url, str), "flow_url must be str"
+        verify(flow_url, "str", "flow_url must be str")
         self._auth = auth
         self._play_flow_url = flow_url
         parsed = urlparse(self._play_flow_url)
@@ -31,16 +33,20 @@ class Flow(Api):
     def run_id(self):
         return self._run_id
 
-    def _call_flow(self, url):
+    def _call_flow(self, url, params):
+        headers = {
+            **self._auth.header,
+            "Content-Type": "application/json"
+        }
         return self.api_call(
             url,
             "GET",
-            self._auth.header,
-            None
+            headers,
+            params
         )
 
-    def play(self):
-        response = self._call_flow(self._play_flow_url)
+    def play(self, params=None):
+        response = self._call_flow(self._play_flow_url, params)
         self._run_id = response.run_id
         self._started = True
         return response
@@ -49,7 +55,7 @@ class Flow(Api):
         if self._started:
             url = f"{self._flow_url}/{self._run_id}/{self._STATUS_PATH}"
             response = self._call_flow(url)
-            return response.status
+            return response
         else:
             raise RuntimeError(
                 f"No running job id. Must call "
@@ -58,8 +64,9 @@ class Flow(Api):
 
     def stop(self):
         status = self.status()
-        if status == 'running':
+        _status = status.status
+        if _status == 'running':
             url = f"{self._flows_url}/{self._run_id}/{self._STOP_PATH}"
             return self._call_flow(url)
         else:
-            raise RuntimeError(f"Invalid job status: '{status}'")
+            raise RuntimeError(f"Invalid job status: '{_status}'")

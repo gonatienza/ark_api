@@ -1,5 +1,5 @@
 from .arktoken import ArkToken
-from ark_api.utils import Secret
+from ark_api.utils import verify
 from ark_api.discovery import Discovery
 
 
@@ -7,9 +7,9 @@ class PlatformToken(ArkToken):
     _API_PATH_FORMAT = "{}/oauth2/platformtoken"
 
     def __init__(self, subdomain, username, password):
-        assert isinstance(subdomain, str), "subdomain must be str"
-        assert isinstance(username, str), "username must be str"
-        assert isinstance(password, Secret), "password must be Secret"
+        verify(subdomain, "str", "subdomain must be str")
+        verify(username, "str", "username must be str")
+        verify(password, "Secret", "password must be Secret")
         discovery = Discovery(subdomain)
         api_path = self._API_PATH_FORMAT.format(discovery.endpoint)
         params = {

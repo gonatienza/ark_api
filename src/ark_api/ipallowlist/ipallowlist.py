@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.authorization import Bearer
+from ark_api.utils import verify
 
 
 _API_PATH_FORMAT = (
@@ -10,7 +10,7 @@ _API_PATH_FORMAT = (
 
 class GetIpAllowList(Api):
     def __init__(self, auth):
-        assert isinstance(auth, Bearer), "auth must be Bearer"
+        verify(auth, "PlatformBearer", "auth must be PlatformBearer")
         api_path = _API_PATH_FORMAT.format(auth.token.jwt.subdomain)
         headers = {
             **auth.header,
@@ -39,8 +39,8 @@ class GetIpAllowList(Api):
 
 class SetIpAllowList(Api):
     def __init__(self, auth, ip_allow_list):
-        assert isinstance(auth, Bearer), "auth must be Bearer"
-        assert isinstance(ip_allow_list, list), "ip_allow_list must be list"
+        verify(auth, "PlatformBearer", "auth must be PlatformBearer")
+        verify(ip_allow_list, "list", "ip_allow_list must be list")
         api_path = _API_PATH_FORMAT.format(auth.token.jwt.subdomain)
         headers = {
             **auth.header,

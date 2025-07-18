@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.utils import ArkObject
+from ark_api.utils import ArkObject, verify
 from ark_api.exceptions import ExpiredToken
 from abc import abstractmethod
 from time import time
@@ -11,6 +11,11 @@ import os
 class ArkToken(Api):
     @abstractmethod
     def __init__(self):
+        """
+        Following attributes required:
+        _access_token
+        _jwt
+        """
         pass
 
     @staticmethod
@@ -46,7 +51,7 @@ class ArkToken(Api):
         )
 
     def save_file(self, file):
-        assert isinstance(file, str), "file must be str"
+        verify(file, "str", "file must be str")
         with open(file, "w") as token_file:
             token_file.write(self._access_token)
 
@@ -61,7 +66,7 @@ class ArkToken(Api):
 
     @classmethod
     def from_keyring(cls, username):
-        assert isinstance(username, str), "username must be str"
+        verify(username, "str", "username must be str")
         access_token = keyring.get_password(
             service_name=f"{cls.__module__}.{cls.__name__}",
             username=username
@@ -73,7 +78,7 @@ class ArkToken(Api):
 
     @classmethod
     def from_file(cls, file):
-        assert isinstance(file, str), "file must be str"
+        verify(file, "str", "file must be str")
         if not os.path.exists(file):
             raise FileNotFoundError("Token not found")
         with open(file, "r") as token_file:
