@@ -56,7 +56,8 @@ class ArkToken(Api):
             token_file.write(self._access_token)
 
     @classmethod
-    def _from_string(cls, access_token):
+    def from_string(cls, access_token):
+        verify(access_token, "str", "access_token must be str")
         obj = cls.__new__(cls)
         obj._access_token = access_token
         obj._jwt = obj._get_unverified_claims(obj._access_token)
@@ -72,7 +73,7 @@ class ArkToken(Api):
             username=username
         )
         if access_token:
-            return cls._from_string(access_token)
+            return cls.from_string(access_token)
         else:
             raise LookupError("No keyring found")
 
@@ -83,4 +84,4 @@ class ArkToken(Api):
             raise FileNotFoundError("Token not found")
         with open(file, "r") as token_file:
             access_token = token_file.read()
-        return cls._from_string(access_token)
+        return cls.from_string(access_token)
