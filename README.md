@@ -18,7 +18,7 @@ pip install https://github.com/gonatienza/ark_api/archive/refs/tags/latest.tar.g
 
 ```
 from ark_api.utils import Secret
-from ark_api.authorization import PlatformBearer
+from ark_api.authorizations import PlatformBearer
 from ark_api.token import PlatformToken
 from ark_api.safes import Safes
 from getpass import getpass
