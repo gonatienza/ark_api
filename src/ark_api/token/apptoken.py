@@ -1,7 +1,7 @@
 from .arktoken import ArkToken
 from ark_api.utils import verify
 from ark_api.discovery import Discovery
-from ark_api.authorization import Basic, AppBearer
+from ark_api.authorizations import Basic, AppBearer
 
 
 class AppToken(ArkToken):
