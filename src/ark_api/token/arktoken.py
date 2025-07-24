@@ -1,6 +1,5 @@
 from ark_api.api import Api
 from ark_api.utils import ArkObject, verify
-from ark_api.exceptions import ExpiredToken
 from abc import abstractmethod
 from time import time
 import keyring
@@ -61,8 +60,6 @@ class ArkToken(Api):
         obj = cls.__new__(cls)
         obj._access_token = access_token
         obj._jwt = obj._get_unverified_claims(obj._access_token)
-        if not obj.is_valid():
-            raise ExpiredToken("Token has expired")
         return obj
 
     @classmethod
