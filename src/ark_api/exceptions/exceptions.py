@@ -5,13 +5,6 @@ class ArkApiError(Exception):
     pass
 
 
-class ExpiredToken(ArkApiError):
-    """
-    Expired token
-    """
-    pass
-
-
 class APIError(ArkApiError):
     """
     API Error
