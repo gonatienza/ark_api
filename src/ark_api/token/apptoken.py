@@ -81,4 +81,4 @@ class AppToken(ArkToken):
             headers,
             params
         )
-        return response.code
+        return response
