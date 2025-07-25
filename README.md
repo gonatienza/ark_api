@@ -60,7 +60,6 @@ password = Secret(
    getpass(f'{username} Password: ')
 )
 
-
 # Get Identity App Token and Authorization Object
 scope = 'All'
 app_id = 'my_app'
