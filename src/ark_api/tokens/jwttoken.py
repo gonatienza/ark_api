@@ -1,18 +1,20 @@
-from ark_api.api import Api
+from .arktoken import ArkToken
 from ark_api.utils import ArkObject, verify
 from abc import abstractmethod
 from time import time
 import keyring
 import jwt
 import os
+import json
 
 
-class ArkToken(Api):
+class JwtToken(ArkToken):
     @abstractmethod
     def __init__(self):
         """
         Following attributes required:
         _access_token
+        _subdomain
         _jwt
         """
         pass
@@ -32,12 +34,15 @@ class ArkToken(Api):
         return True
 
     @property
-    def access_token(self):
-        return self._access_token
-
-    @property
     def jwt(self):
         return self._jwt
+
+    def encode(self):
+        ret = {
+            "access_token": self._access_token,
+            "subdomain": self._subdomain
+        }
+        return json.dumps(ret)
 
     def save_keyring(self):
         service_name = (
@@ -46,31 +51,33 @@ class ArkToken(Api):
         keyring.set_password(
             service_name=service_name,
             username=self._jwt.unique_name,
-            password=self._access_token
+            password=self.encode()
         )
 
     def save_file(self, file):
         verify(file, "str", "file must be str")
         with open(file, "w") as token_file:
-            token_file.write(self._access_token)
+            token_file.write(self.encode())
 
     @classmethod
-    def from_string(cls, access_token):
-        verify(access_token, "str", "access_token must be str")
+    def from_string(cls, token_str):
+        verify(token_str, "str", "token_str must be str")
         obj = cls.__new__(cls)
-        obj._access_token = access_token
+        token = json.loads(token_str)
+        obj._subdomain = token["subdomain"]
+        obj._access_token = token["access_token"]
         obj._jwt = obj._get_unverified_claims(obj._access_token)
         return obj
 
     @classmethod
     def from_keyring(cls, username):
         verify(username, "str", "username must be str")
-        access_token = keyring.get_password(
+        token_str = keyring.get_password(
             service_name=f"{cls.__module__}.{cls.__name__}",
             username=username
         )
-        if access_token:
-            return cls.from_string(access_token)
+        if token_str:
+            return cls.from_string(token_str)
         else:
             raise LookupError("No keyring found")
 
@@ -80,5 +87,5 @@ class ArkToken(Api):
         if not os.path.exists(file):
             raise FileNotFoundError("Token not found")
         with open(file, "r") as token_file:
-            access_token = token_file.read()
-        return cls.from_string(access_token)
+            token_str = token_file.read()
+        return cls.from_string(token_str)

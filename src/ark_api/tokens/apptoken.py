@@ -1,10 +1,10 @@
-from .arktoken import ArkToken
+from .jwttoken import JwtToken
 from ark_api.utils import verify
 from ark_api.discovery import Discovery
 from ark_api.authorizations import Basic, AppBearer
 
 
-class AppToken(ArkToken):
+class AppToken(JwtToken):
     _GEN_TOKEN = "token"
     _INTROSPECT_TOKEN = "introspect"
     _REVOKE_TOKEN = "revoke"
@@ -16,7 +16,8 @@ class AppToken(ArkToken):
         verify(subdomain, "str", "subdomain must be str")
         verify(username, "str", "username must be str")
         verify(password, "Secret", "password must be Secret")
-        discovery = Discovery(subdomain)
+        self._subdomain = subdomain
+        discovery = Discovery(self._subdomain)
         self._gen_api_path = self._API_PATH_FORMAT.format(
             discovery.endpoint,
             self._GEN_TOKEN,
@@ -39,8 +40,7 @@ class AppToken(ArkToken):
             "Content-Type": "application/x-www-form-urlencoded"
         }
         method = "POST"
-        self._subdomain = subdomain
-        self._response = self.api_call(
+        self._response = self.json_api_call(
             self._gen_api_path,
             method,
             headers,
@@ -57,7 +57,7 @@ class AppToken(ArkToken):
         }
         method = "POST"
         params = {"token": self._access_token}
-        response = self.api_call(
+        response = self.json_api_call(
             self._introspect_api_path,
             method,
             headers,
@@ -75,7 +75,7 @@ class AppToken(ArkToken):
         }
         method = "POST"
         params = {"token": self._access_token}
-        response = self._api_call(
+        response = self.api_call(
             self._revoke_api_path,
             method,
             headers,

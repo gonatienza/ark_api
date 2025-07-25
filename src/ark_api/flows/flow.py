@@ -38,7 +38,7 @@ class Flow(Api):
             **self._auth.header,
             "Content-Type": "application/json"
         }
-        return self.api_call(
+        return self.json_api_call(
             url,
             "GET",
             headers,
