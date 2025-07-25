@@ -61,18 +61,15 @@ password = Secret(
 )
 
 
-# Get Identity App Token
+# Get Identity App Token and Authorization Object
 scope = 'All'
 app_id = 'my_app'
 app_token = AppToken(app_id, scope, subdomain, username, password)
-
-# Get Authorization Object
 app_auth = AppBearer(app_token)
 
 # Get Conjur JWT ID Token and get Authorization Object
 conjur_id_token = ConjurIdToken(app_auth)
 conjur_auth = ConjurBearer(conjur_id_token)
-
 
 # Rotate API Key for workload
 identifier = 'data/workloads/myworkload'
