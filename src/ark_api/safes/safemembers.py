@@ -12,7 +12,7 @@ class SafeMembers(Api):
         verify(auth, "PlatformBearer", "auth must be PlatformBearer")
         verify(safe_url_id, "str", "safe_name must be str")
         api_path = self._API_PATH_FORMAT.format(
-            auth.token.jwt.subdomain,
+            auth.token.subdomain,
             safe_url_id
         )
         params = {"safeUrlId": safe_url_id}
@@ -21,7 +21,7 @@ class SafeMembers(Api):
             "Content-Type": "application/json"
         }
         method = "GET"
-        self._response = self.api_call(api_path, method, headers, params)
+        self._response = self.json_api_call(api_path, method, headers, params)
 
     @property
     def value(self):

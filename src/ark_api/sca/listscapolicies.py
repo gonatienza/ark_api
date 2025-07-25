@@ -7,14 +7,14 @@ class ListScaPolicies(Api):
 
     def __init__(self, auth):
         verify(auth, "PlatformBearer", "auth must be PlatformBearer")
-        api_path = self._API_PATH_FORMAT.format(auth.token.jwt.subdomain)
+        api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
         params = {}
         headers = {
             **auth.header,
             "Content-Type": "application/json"
         }
         method = "GET"
-        self._response = self.api_call(api_path, method, headers, params)
+        self._response = self.json_api_call(api_path, method, headers, params)
 
     @property
     def hits(self):
