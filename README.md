@@ -54,6 +54,7 @@ from ark_api.authorizations import AppBearer, ConjurBearer, ConjurApiKey
 from ark_api.conjur import RotateApiKey, GetSecret, GetSecrets, ListSecrets
 from getpass import getpass
 
+
 subdomain = input('Subdomain: ')
 username = input('Username: ')
 password = Secret(
