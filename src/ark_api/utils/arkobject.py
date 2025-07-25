@@ -18,4 +18,4 @@ class ArkObject:
             ]
 
     def __iter__(self):
-        return iter(self.__dict__.items())
+        return iter(self.__dict__)
