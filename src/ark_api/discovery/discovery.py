@@ -12,9 +12,8 @@ class Discovery(Api):
         verify(subdomain, "str", "subdomain must be str")
         api_path = self._API_PATH_FORMAT.format(subdomain)
         headers = {"Content-Type": "application/json"}
-        params = None
         method = "GET"
-        self._response = self.api_call(api_path, method, headers, params)
+        self._response = self.json_api_call(api_path, method, headers)
 
     @property
     def endpoint(self):

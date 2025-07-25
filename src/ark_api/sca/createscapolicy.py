@@ -10,13 +10,13 @@ class CreateScaPolicy(Api):
     def __init__(self, auth, params):
         verify(auth, "PlatformBearer", "auth must be PlatformBearer")
         verify(params, "dict", "params must be dict")
-        api_path = self._API_PATH_FORMAT.format(auth.token.jwt.subdomain)
+        api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
         headers = {
             **auth.header,
             "Content-Type": "application/json"
         }
         method = "POST"
-        self._response = self.api_call(api_path, method, headers, params)
+        self._response = self.json_api_call(api_path, method, headers, params)
 
     @property
     def job_id(self):
