@@ -67,7 +67,7 @@ app_id = 'my_app'
 app_token = AppToken(app_id, scope, subdomain, username, password)
 app_auth = AppBearer(app_token)
 
-# Get Conjur JWT ID Token and get Authorization Object
+# Get Conjur ID Token and get Authorization Object
 conjur_id_token = ConjurIdToken(app_auth)
 conjur_auth = ConjurBearer(conjur_id_token)
 
@@ -76,7 +76,7 @@ identifier = 'data/workloads/myworkload'
 rotate_api_key = RotateApiKey(conjur_auth, identifier)
 conjur_api_key_auth = ConjurApiKey(rotate_api_key.response)
 
-# Get Workload Token and Authorization Object
+# Get Conjur Workload Token and Authorization Object
 conjur_workload_token = ConjurWorkloadToken(conjur_api_key_auth, subdomain, identifier)
 conjur_workload_auth = ConjurBearer(conjur_workload_token)
 
