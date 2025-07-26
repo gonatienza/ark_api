@@ -16,7 +16,7 @@ class JwtBearer(Bearer):
     def __init__(self, token):
         verify(token, "JwtToken", "token must be JwtToken")
         super().__init__(token)
-        authorization = Secret(f"Bearer {self._token.access_token}")
+        authorization = Secret(f"Bearer {self._token.access_token.get()}")
         self._header = {"Authorization": authorization.get()}
 
 
@@ -36,5 +36,7 @@ class ConjurBearer(Bearer):
     def __init__(self, token):
         verify(token, "ConjurToken", "token must be ConjurToken")
         super().__init__(token)
-        authorization = Secret(f'Token token="{self._token.access_token}"')
+        authorization = Secret(
+            f'Token token="{self._token.access_token.get()}"'
+        )
         self._header = {"Authorization": authorization.get()}

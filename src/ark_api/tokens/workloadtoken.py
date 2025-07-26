@@ -20,7 +20,7 @@ class ConjurWorkloadToken(ConjurToken):
             quote(f"host/{identifier}", safe="")
         )
         headers = {"Accept-Encoding": "base64"}
-        data = SecretBytes(auth.api_key.encode())
+        data = SecretBytes(auth.api_key.get().encode())
         method = "POST"
         self._response = self.api_call(
             api_path=api_path,

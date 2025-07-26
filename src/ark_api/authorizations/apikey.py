@@ -16,12 +16,12 @@ class ApiKey(ArkAuthorization):
 class FlowsApiKey(ApiKey):
     def __init__(self, api_key):
         verify(api_key, "Secret", "api_key must be Secret")
-        self._api_key = api_key.get()
-        self._header = {"apikey": self._api_key}
+        self._api_key = api_key
+        self._header = {"apikey": self._api_key.get()}
 
 
 class ConjurApiKey(ApiKey):
     def __init__(self, api_key):
         verify(api_key, "Secret", "api_key must be Secret")
-        self._api_key = api_key.get()
+        self._api_key = api_key
         self._header = {}

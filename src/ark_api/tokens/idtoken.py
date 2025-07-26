@@ -11,7 +11,7 @@ class ConjurIdToken(ConjurToken):
     def __init__(self, auth):
         verify(auth, "Bearer", "auth must be Bearer")
         api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
-        params = {"id_token": auth.token.access_token}
+        params = {"id_token": auth.token.access_token.get()}
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "Accept-Encoding": "base64"

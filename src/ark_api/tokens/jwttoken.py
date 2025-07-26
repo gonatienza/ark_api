@@ -1,5 +1,5 @@
 from .arktoken import ArkToken
-from ark_api.utils import verify
+from ark_api.utils import verify, Secret
 from abc import abstractmethod
 from time import time
 import keyring
@@ -39,7 +39,7 @@ class JwtToken(ArkToken):
 
     def encode(self):
         ret = {
-            "access_token": self._access_token,
+            "access_token": self._access_token.get(),
             "subdomain": self._subdomain
         }
         return json.dumps(ret)
@@ -65,8 +65,8 @@ class JwtToken(ArkToken):
         obj = cls.__new__(cls)
         token = json.loads(token_str)
         obj._subdomain = token["subdomain"]
-        obj._access_token = token["access_token"]
-        obj._jwt = obj._get_unverified_claims(obj._access_token)
+        obj._access_token = Secret(token["access_token"])
+        obj._jwt = obj._get_unverified_claims(obj._access_token.get())
         return obj
 
     @classmethod
