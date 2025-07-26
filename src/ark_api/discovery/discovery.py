@@ -1,8 +1,9 @@
-from ark_api.api import Api
+from ark_api.model import ArkApiCall
+from ark_api.utils import api_call
 from ark_api.utils import verify
 
 
-class Discovery(Api):
+class Discovery(ArkApiCall):
     _API_PATH_FORMAT = (
         "https://platform-discovery.cyberark.cloud/"
         "api/identity-endpoint/{}"
@@ -13,4 +14,5 @@ class Discovery(Api):
         api_path = self._API_PATH_FORMAT.format(subdomain)
         headers = {"Content-Type": "application/json"}
         method = "GET"
-        self._response = self.json_api_call(api_path, method, headers)
+        response = api_call(api_path, method, headers)
+        self._response = response.json()

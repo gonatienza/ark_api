@@ -1,8 +1,8 @@
-from ark_api.api import Api
 from abc import abstractmethod
+from ark_api.model import ArkApiCall
 
 
-class ArkToken(Api):
+class ArkToken(ArkApiCall):
     @abstractmethod
     def __init__(self):
         """

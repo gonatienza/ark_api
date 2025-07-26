@@ -1,8 +1,9 @@
-from ark_api.api import Api
+from ark_api.model import ArkApiCall
+from ark_api.utils import api_call
 from ark_api.utils import verify
 
 
-class CreateScaPolicy(Api):
+class CreateScaPolicy(ArkApiCall):
     _API_PATH_FORMAT = (
         "https://{}.sca.cyberark.cloud/api/policies/create-policy"
     )
@@ -16,4 +17,5 @@ class CreateScaPolicy(Api):
             "Content-Type": "application/json"
         }
         method = "POST"
-        self._response = self.json_api_call(api_path, method, headers, params)
+        response = api_call(api_path, method, headers, params)
+        self._response = response.json()

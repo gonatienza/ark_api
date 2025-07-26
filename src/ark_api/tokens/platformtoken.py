@@ -1,5 +1,5 @@
 from .jwttoken import JwtToken
-from ark_api.utils import verify, Secret
+from ark_api.utils import verify, Secret, api_call
 from ark_api.discovery import Discovery
 
 
@@ -20,6 +20,7 @@ class PlatformToken(JwtToken):
         }
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         method = "POST"
-        self._response = self.json_api_call(api_path, method, headers, params)
+        response = api_call(api_path, method, headers, params)
+        self._response = response.json()
         self._access_token = Secret(self._response["access_token"])
         self._jwt = self._get_unverified_claims(self._access_token.get())
