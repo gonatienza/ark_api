@@ -1,4 +1,5 @@
 from .arktoken import ArkToken
+from ark_api.utils import Secret
 from time import time
 from base64 import b64decode
 import json
@@ -17,7 +18,7 @@ class ConjurToken(ArkToken):
         """
         res_bytes = self._response.read()
         res_str = res_bytes.decode()
-        self._access_token = res_str
+        self._access_token = Secret(res_str)
         decoded_bytes = b64decode(res_str)
         decoded_str = decoded_bytes.decode()
         decoded = json.loads(decoded_str)
