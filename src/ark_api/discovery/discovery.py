@@ -14,7 +14,3 @@ class Discovery(Api):
         headers = {"Content-Type": "application/json"}
         method = "GET"
         self._response = self.json_api_call(api_path, method, headers)
-
-    @property
-    def endpoint(self):
-        return self._response.endpoint

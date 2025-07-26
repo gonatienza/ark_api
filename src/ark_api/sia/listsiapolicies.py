@@ -15,7 +15,3 @@ class ListSiaPolicies(Api):
         }
         method = "GET"
         self._response = self.json_api_call(api_path, method, headers, params)
-
-    @property
-    def items(self):
-        return self._response.items

@@ -17,7 +17,3 @@ class CreateScaPolicy(Api):
         }
         method = "POST"
         self._response = self.json_api_call(api_path, method, headers, params)
-
-    @property
-    def job_id(self):
-        return self._response.job_id

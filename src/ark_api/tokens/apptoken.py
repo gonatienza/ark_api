@@ -19,17 +19,17 @@ class AppToken(JwtToken):
         self._subdomain = subdomain
         discovery = Discovery(self._subdomain)
         self._gen_api_path = self._API_PATH_FORMAT.format(
-            discovery.endpoint,
+            discovery.response["endpoint"],
             self._GEN_TOKEN,
             app_id
         )
         self._introspect_api_path = self._API_PATH_FORMAT.format(
-            discovery.endpoint,
+            discovery.response["endpoint"],
             self._INTROSPECT_TOKEN,
             app_id
         )
         self._revoke_api_path = self._API_PATH_FORMAT.format(
-            discovery.endpoint,
+            discovery.response["endpoint"],
             self._REVOKE_TOKEN,
             app_id
         )
@@ -46,7 +46,7 @@ class AppToken(JwtToken):
             headers,
             params
         )
-        self._access_token = self._response.access_token
+        self._access_token = self._response["access_token"]
         self._jwt = self._get_unverified_claims(self._access_token)
 
     def introspect(self):

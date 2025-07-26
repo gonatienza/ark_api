@@ -22,7 +22,3 @@ class SafeMembers(Api):
         }
         method = "GET"
         self._response = self.json_api_call(api_path, method, headers, params)
-
-    @property
-    def value(self):
-        return self._response.value

@@ -1,5 +1,4 @@
 from .secret import SecretStr, SecretBytes
-import re
 
 
 def verify(obj, class_name, error_message=""):
@@ -31,8 +30,3 @@ def mask_secrets_from_dict(d):
 def mask_secrets_from_bytes(b):
     assert isinstance(b, bytes), "b must be bytes"
     return "*****" if isinstance(b, SecretBytes) else b
-
-
-def pythonify_attr(s):
-    assert isinstance(s, str), "s must be str"
-    return re.sub(r"\W|^(?=\d)", "_", s)

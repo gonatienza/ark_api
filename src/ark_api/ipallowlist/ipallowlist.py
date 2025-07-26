@@ -19,22 +19,6 @@ class GetIpAllowList(Api):
         method = "GET"
         self._response = self.json_api_call(api_path, method, headers)
 
-    @property
-    def customerPublicIPs(self):
-        return self._response.customerPublicIPs
-
-    @property
-    def updateInProgress(self):
-        return self._response.updateInProgress
-
-    @property
-    def lastTaskId(self):
-        return self._response.lastTaskId
-
-    @property
-    def dateUpdated(self):
-        return self._response.dateUpdated
-
 
 class SetIpAllowList(Api):
     def __init__(self, auth, ip_allow_list):
@@ -48,11 +32,3 @@ class SetIpAllowList(Api):
         method = "PUT"
         params = {'customerPublicIPs': ip_allow_list}
         self._response = self.json_api_call(api_path, method, headers, params)
-
-    @property
-    def taskId(self):
-        return self._response.taskId
-
-    @property
-    def status(self):
-        return self._response.status

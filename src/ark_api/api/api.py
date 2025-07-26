@@ -1,6 +1,5 @@
 from ark_api.exceptions import APIError
 from ark_api.utils import (
-    ArkObject,
     mask_secrets_from_dict,
     mask_secrets_from_bytes,
     verify
@@ -13,7 +12,15 @@ import json
 class Api(ABC):
     @abstractmethod
     def __init__(self):
+        """
+        Following attributes required:
+        _response
+        """
         pass
+
+    @property
+    def response(self):
+        return self._response
 
     @classmethod
     def json_api_call(cls, api_path, method, headers, params={}):
@@ -21,7 +28,7 @@ class Api(ABC):
         response_bytes = response.read()
         response_str = response_bytes.decode()
         response_dict = json.loads(response_str)
-        return ArkObject(response_dict)
+        return response_dict
 
     @staticmethod
     def api_call(api_path, method, headers, params={}, data=b""):

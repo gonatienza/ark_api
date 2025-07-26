@@ -28,6 +28,7 @@ class Flow(Api):
         )
         self._run_id = None
         self._started = False
+        self._response = None
 
     @property
     def run_id(self):
@@ -47,7 +48,7 @@ class Flow(Api):
 
     def play(self, params=None):
         response = self._call_flow(self._play_flow_url, params)
-        self._run_id = response.run_id
+        self._run_id = response["run_id"]
         self._started = True
         return response
 

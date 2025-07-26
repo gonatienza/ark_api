@@ -1,5 +1,4 @@
 from .arktoken import ArkToken
-from ark_api.utils import ArkObject
 from time import time
 from base64 import b64decode
 import json
@@ -24,12 +23,10 @@ class ConjurToken(ArkToken):
         decoded = json.loads(decoded_str)
         protected_bytes = b64decode(decoded["protected"])
         protected_str = protected_bytes.decode()
-        protected = json.loads(protected_str)
-        self._protected = ArkObject(protected)
+        self._protected = json.loads(protected_str)
         payload_bytes = b64decode(decoded["payload"])
         payload_str = payload_bytes.decode()
-        payload = json.loads(payload_str)
-        self._payload = ArkObject(payload)
+        self._payload = json.loads(payload_str)
 
     @property
     def access_token(self):
@@ -45,6 +42,6 @@ class ConjurToken(ArkToken):
 
     def is_valid(self):
         now = time()
-        if now > self._payload.exp:
+        if now > self._payload["exp"]:
             return False
         return True

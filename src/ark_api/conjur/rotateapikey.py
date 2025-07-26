@@ -1,5 +1,5 @@
 from ark_api.api import Api
-from ark_api.utils import verify
+from ark_api.utils import verify, Secret
 from urllib.parse import urlencode
 
 
@@ -17,10 +17,6 @@ class RotateApiKey(Api):
         api_path = f"{_api_path}?{_params}"
         headers = auth.header
         method = "PUT"
-        self._response = self.api_call(api_path, method, headers)
-        api_key_bytes = self._response.read()
-        self._api_key = api_key_bytes.decode()
-
-    @property
-    def api_key(self):
-        return self._api_key
+        response = self.api_call(api_path, method, headers)
+        response_bytes = response.read()
+        self._response = Secret(response_bytes.decode())

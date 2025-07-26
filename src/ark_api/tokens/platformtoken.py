@@ -12,7 +12,7 @@ class PlatformToken(JwtToken):
         verify(password, "Secret", "password must be Secret")
         self._subdomain = subdomain
         discovery = Discovery(self._subdomain)
-        api_path = self._API_PATH_FORMAT.format(discovery.endpoint)
+        api_path = self._API_PATH_FORMAT.format(discovery.response["endpoint"])
         params = {
             "grant_type": "client_credentials",
             "client_id": username,
@@ -21,5 +21,5 @@ class PlatformToken(JwtToken):
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         method = "POST"
         self._response = self.json_api_call(api_path, method, headers, params)
-        self._access_token = self._response.access_token
+        self._access_token = self._response["access_token"]
         self._jwt = self._get_unverified_claims(self._access_token)
