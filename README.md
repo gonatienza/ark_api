@@ -92,7 +92,6 @@ secret_paths = [
     'data/vault/mysafe/account/password'
 ]
 secrets = GetSecrets(conjur_workload_auth, secret_paths)
-secrets.response
 secrets.response["conjur:variable:data/vault/mysafe/account/password"].get()
 
 # Fetch list of resources available
