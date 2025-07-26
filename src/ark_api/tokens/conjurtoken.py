@@ -16,10 +16,8 @@ class ConjurToken(ArkToken):
         Following attributes required:
         _response
         """
-        res_bytes = self._response.read()
-        res_str = res_bytes.decode()
-        self._access_token = Secret(res_str)
-        decoded_bytes = b64decode(res_str)
+        self._access_token = Secret(self._response.text())
+        decoded_bytes = b64decode(self._access_token.get())
         decoded_str = decoded_bytes.decode()
         decoded = json.loads(decoded_str)
         protected_bytes = b64decode(decoded["protected"])

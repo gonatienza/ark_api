@@ -1,5 +1,5 @@
 from .jwttoken import JwtToken
-from ark_api.utils import verify, Secret
+from ark_api.utils import verify, Secret, api_call
 from ark_api.discovery import Discovery
 from ark_api.authorizations import Basic, AppBearer
 
@@ -40,12 +40,13 @@ class AppToken(JwtToken):
             "Content-Type": "application/x-www-form-urlencoded"
         }
         method = "POST"
-        self._response = self.json_api_call(
+        response = api_call(
             self._gen_api_path,
             method,
             headers,
             params
         )
+        self._response = response.json()
         self._access_token = Secret(self._response["access_token"])
         self._jwt = self._get_unverified_claims(self._access_token.get())
 
@@ -57,13 +58,13 @@ class AppToken(JwtToken):
         }
         method = "POST"
         params = {"token": self._access_token.get()}
-        response = self.json_api_call(
+        response = api_call(
             self._introspect_api_path,
             method,
             headers,
             params
         )
-        return response
+        return response.json()
 
     def revoke(self, username, password):
         verify(username, "str", "username must be str")
@@ -75,7 +76,7 @@ class AppToken(JwtToken):
         }
         method = "POST"
         params = {"token": self._access_token.get()}
-        response = self.api_call(
+        response = api_call(
             self._revoke_api_path,
             method,
             headers,

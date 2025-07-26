@@ -1,5 +1,5 @@
 from .conjurtoken import ConjurToken
-from ark_api.utils import verify, SecretBytes
+from ark_api.utils import verify, SecretBytes, api_call
 from time import time
 from urllib.parse import quote
 
@@ -22,7 +22,7 @@ class ConjurWorkloadToken(ConjurToken):
         headers = {"Accept-Encoding": "base64"}
         data = SecretBytes(auth.api_key.get().encode())
         method = "POST"
-        self._response = self.api_call(
+        self._response = api_call(
             api_path=api_path,
             method=method,
             headers=headers,

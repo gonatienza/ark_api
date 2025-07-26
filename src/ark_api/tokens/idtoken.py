@@ -1,4 +1,5 @@
 from .conjurtoken import ConjurToken
+from ark_api.utils import api_call
 from ark_api.utils import verify
 
 
@@ -18,5 +19,5 @@ class ConjurIdToken(ConjurToken):
         }
         method = "POST"
         self._subdomain = auth.token.subdomain
-        self._response = self.api_call(api_path, method, headers, params)
+        self._response = api_call(api_path, method, headers, params)
         super().__init__()

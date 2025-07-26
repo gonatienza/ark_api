@@ -1,9 +1,10 @@
-from ark_api.api import Api
+from ark_api.model import ArkApiCall
+from ark_api.utils import api_call
 from ark_api.utils import verify
 from urllib.parse import urlparse
 
 
-class Flow(Api):
+class Flow(ArkApiCall):
     _STOP_PATH = "stop"
     _STATUS_PATH = "status"
 
@@ -39,12 +40,13 @@ class Flow(Api):
             **self._auth.header,
             "Content-Type": "application/json"
         }
-        return self.json_api_call(
+        response = api_call(
             url,
             "GET",
             headers,
             params
         )
+        return response.json()
 
     def play(self, params=None):
         response = self._call_flow(self._play_flow_url, params)
@@ -55,8 +57,7 @@ class Flow(Api):
     def status(self):
         if self._started:
             url = f"{self._flow_url}/{self._run_id}/{self._STATUS_PATH}"
-            response = self._call_flow(url)
-            return response
+            return self._call_flow(url)
         else:
             raise RuntimeError(
                 f"No running job id. Must call "

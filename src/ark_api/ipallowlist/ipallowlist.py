@@ -1,4 +1,5 @@
-from ark_api.api import Api
+from ark_api.model import ArkApiCall
+from ark_api.utils import api_call
 from ark_api.utils import verify
 
 
@@ -8,7 +9,7 @@ _API_PATH_FORMAT = (
 )
 
 
-class GetIpAllowList(Api):
+class GetIpAllowList(ArkApiCall):
     def __init__(self, auth):
         verify(auth, "PlatformBearer", "auth must be PlatformBearer")
         api_path = _API_PATH_FORMAT.format(auth.token.subdomain)
@@ -17,10 +18,11 @@ class GetIpAllowList(Api):
             "Content-Type": "application/json"
         }
         method = "GET"
-        self._response = self.json_api_call(api_path, method, headers)
+        response = api_call(api_path, method, headers)
+        self._response = response.json()
 
 
-class SetIpAllowList(Api):
+class SetIpAllowList(ArkApiCall):
     def __init__(self, auth, ip_allow_list):
         verify(auth, "PlatformBearer", "auth must be PlatformBearer")
         verify(ip_allow_list, "list", "ip_allow_list must be list")
@@ -31,4 +33,5 @@ class SetIpAllowList(Api):
         }
         method = "PUT"
         params = {'customerPublicIPs': ip_allow_list}
-        self._response = self.json_api_call(api_path, method, headers, params)
+        response = api_call(api_path, method, headers, params)
+        self._response = response.json()

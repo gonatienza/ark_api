@@ -1,9 +1,10 @@
-from ark_api.api import Api
+from ark_api.model import ArkApiCall
+from ark_api.utils import api_call
 from ark_api.utils import verify, Secret
 from urllib.parse import urlencode
 
 
-class RotateApiKey(Api):
+class RotateApiKey(ArkApiCall):
     _API_PATH_FORMAT = (
         "https://{}.secretsmgr.cyberark.cloud/api/"
         "authn/conjur/api_key"
@@ -17,6 +18,5 @@ class RotateApiKey(Api):
         api_path = f"{_api_path}?{_params}"
         headers = auth.header
         method = "PUT"
-        response = self.api_call(api_path, method, headers)
-        response_bytes = response.read()
-        self._response = Secret(response_bytes.decode())
+        response = api_call(api_path, method, headers)
+        self._response = Secret(response.text())

@@ -1,8 +1,9 @@
-from ark_api.api import Api
+from ark_api.model import ArkApiCall
+from ark_api.utils import api_call
 from ark_api.utils import verify
 
 
-class SafeMembers(Api):
+class SafeMembers(ArkApiCall):
     _API_PATH_FORMAT = (
         "https://{}.privilegecloud.cyberark.cloud/"
         "PasswordVault/API/Safes/{}/Members/"
@@ -21,4 +22,5 @@ class SafeMembers(Api):
             "Content-Type": "application/json"
         }
         method = "GET"
-        self._response = self.json_api_call(api_path, method, headers, params)
+        response = api_call(api_path, method, headers, params)
+        self._response = response.json()

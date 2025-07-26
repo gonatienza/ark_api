@@ -1,9 +1,10 @@
-from ark_api.api import Api
+from ark_api.model import ArkApiCall
+from ark_api.utils import api_call
 from ark_api.utils import verify, Secret
 from urllib.parse import quote, urlencode
 
 
-class ListSecrets(Api):
+class ListSecrets(ArkApiCall):
     _API_PATH_FORMAT = "https://{}.secretsmgr.cyberark.cloud/api/resources"
 
     def __init__(self, auth):
@@ -11,10 +12,11 @@ class ListSecrets(Api):
         api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
         headers = auth.header
         method = "GET"
-        self._response = self.json_api_call(api_path, method, headers)
+        response = api_call(api_path, method, headers)
+        self._response = response.json()
 
 
-class GetSecret(Api):
+class GetSecret(ArkApiCall):
     _API_PATH_FORMAT = (
         "https://{}.secretsmgr.cyberark.cloud/api/"
         "secrets/conjur/variable"
@@ -28,12 +30,11 @@ class GetSecret(Api):
         api_path = f"{_api_path}/{_params}"
         headers = auth.header
         method = "GET"
-        response = self.api_call(api_path, method, headers)
-        response_bytes = response.read()
-        self._response = Secret(response_bytes.decode())
+        response = api_call(api_path, method, headers)
+        self._response = Secret(response.text())
 
 
-class GetSecrets(Api):
+class GetSecrets(ArkApiCall):
     _API_PATH_FORMAT = "https://{}.secretsmgr.cyberark.cloud/api/secrets"
 
     def __init__(self, auth, secrets):
@@ -51,8 +52,9 @@ class GetSecrets(Api):
         api_path = f"{_api_path}?{_params}"
         headers = auth.header
         method = "GET"
-        response = self.json_api_call(api_path, method, headers)
+        response = api_call(api_path, method, headers)
+        json_response = response.json()
         self._response = {
-            item: Secret(response[item])
-            for item in response
+            item: Secret(json_response[item])
+            for item in json_response
         }
