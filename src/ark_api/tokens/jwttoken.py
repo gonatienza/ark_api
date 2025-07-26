@@ -1,5 +1,5 @@
 from .arktoken import ArkToken
-from ark_api.utils import ArkObject, verify
+from ark_api.utils import verify
 from abc import abstractmethod
 from time import time
 import keyring
@@ -25,11 +25,11 @@ class JwtToken(ArkToken):
             _jwt,
             options={"verify_signature": False}
         )
-        return ArkObject(_jwt_dict)
+        return _jwt_dict
 
     def is_valid(self):
         now = time()
-        if now > self._jwt.exp:
+        if now > self._jwt["exp"]:
             return False
         return True
 

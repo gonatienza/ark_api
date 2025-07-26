@@ -74,28 +74,29 @@ conjur_auth = ConjurBearer(conjur_id_token)
 # Rotate API Key for workload
 identifier = 'data/workloads/myworkload'
 rotate_api_key = RotateApiKey(conjur_auth, identifier)
-conjur_api_key_auth = ConjurApiKey(Secret(rotate_api_key.api_key))
+conjur_api_key_auth = ConjurApiKey(rotate_api_key.response)
 
 # Get Workload Token and Authorization Object
 conjur_workload_token = ConjurWorkloadToken(conjur_api_key_auth, subdomain, identifier)
 conjur_workload_auth = ConjurBearer(conjur_workload_token)
 
 # Fetch single secret
-secret_path = 'data/vault/mysafe/secretuser/password'
+secret_path = 'data/vault/mysafe/account/password'
 secret = GetSecret(conjur_workload_auth, secret_path)
-secret.secret.get()
+secret.response.get()
 
 # Fetch multiple secrets
 secret_paths = [
-    'data/vault/mysafe/secretuser/address',
-    'data/vault/mysafe/secretuser/username',
-    'data/vault/mysafe/secretuser/password'
+    'data/vault/mysafe/account/address',
+    'data/vault/mysafe/account/username',
+    'data/vault/mysafe/account/password'
 ]
 secrets = GetSecrets(conjur_workload_auth, secret_paths)
-secrets.secrets.conjur_variable_data_vault_mysafe_secretuser_password.get()
+secrets.response
+secrets.response["conjur:variable:data/vault/mysafe/account/password"].get()
 
 # Fetch list of resources available
 secrets_list = ListSecrets(conjur_workload_auth)
-for secret in secrets_list.secrets:
-    print(secret.__dict__)
+for resource in secrets_list.response:
+    resource
 ```

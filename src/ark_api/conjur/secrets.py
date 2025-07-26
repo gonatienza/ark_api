@@ -1,7 +1,6 @@
 from ark_api.api import Api
-from ark_api.utils import verify, Secret, ArkObject
+from ark_api.utils import verify, Secret
 from urllib.parse import quote, urlencode
-import json
 
 
 class ListSecrets(Api):
@@ -13,11 +12,6 @@ class ListSecrets(Api):
         headers = auth.header
         method = "GET"
         self._response = self.json_api_call(api_path, method, headers)
-        self._secrets = self._response.items
-
-    @property
-    def secrets(self):
-        return self._secrets
 
 
 class GetSecret(Api):
@@ -34,13 +28,9 @@ class GetSecret(Api):
         api_path = f"{_api_path}/{_params}"
         headers = auth.header
         method = "GET"
-        self._response = self.api_call(api_path, method, headers)
-        response_bytes = self._response.read()
-        self._secret = Secret(response_bytes.decode())
-
-    @property
-    def secret(self):
-        return self._secret
+        response = self.api_call(api_path, method, headers)
+        response_bytes = response.read()
+        self._response = Secret(response_bytes.decode())
 
 
 class GetSecrets(Api):
@@ -61,16 +51,8 @@ class GetSecrets(Api):
         api_path = f"{_api_path}?{_params}"
         headers = auth.header
         method = "GET"
-        self._response = self.api_call(api_path, method, headers)
-        response_bytes = self._response.read()
-        response_str = response_bytes.decode()
-        response_dict = json.loads(response_str)
-        _response_dict = {
-            item: Secret(response_dict[item])
-            for item in response_dict
+        response = self.json_api_call(api_path, method, headers)
+        self._response = {
+            item: Secret(response[item])
+            for item in response
         }
-        self._secrets = ArkObject(_response_dict)
-
-    @property
-    def secrets(self):
-        return self._secrets

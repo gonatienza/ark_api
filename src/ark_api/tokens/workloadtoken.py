@@ -26,7 +26,8 @@ class ConjurWorkloadToken(ConjurToken):
             api_path=api_path,
             method=method,
             headers=headers,
-            data=data)
+            data=data
+        )
         super().__init__()
 
     @property
@@ -43,6 +44,6 @@ class ConjurWorkloadToken(ConjurToken):
 
     def is_valid(self):
         now = time()
-        if now > self._payload.exp:
+        if now > self._payload["exp"]:
             return False
         return True
