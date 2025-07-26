@@ -42,7 +42,7 @@ auth = PlatformBearer(token)
 safes = Safes(auth)
 
 # List object
-safes.value
+safes.response['value']
 ```
 
 Working with Conjur Cloud:
