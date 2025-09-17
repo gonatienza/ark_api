@@ -58,7 +58,7 @@ from getpass import getpass
 subdomain = input('Subdomain: ')
 username = input('Username: ')
 password = Secret(
-   getpass(f'{username} Password: ')
+    getpass(f'{username} Password: ')
 )
 
 # Get Identity App Token and Authorization Object
@@ -78,6 +78,57 @@ conjur_api_key_auth = ConjurApiKey(rotate_api_key.response)
 
 # Get Conjur Workload Token and Authorization Object
 conjur_workload_token = ConjurWorkloadToken(conjur_api_key_auth, subdomain, identifier)
+conjur_workload_auth = ConjurBearer(conjur_workload_token)
+
+# Fetch single secret
+secret_path = 'data/vault/mysafe/account/password'
+secret = GetSecret(conjur_workload_auth, secret_path)
+secret.response.get()
+
+# Fetch multiple secrets
+secret_paths = [
+    'data/vault/mysafe/account/address',
+    'data/vault/mysafe/account/username',
+    'data/vault/mysafe/account/password'
+]
+secrets = GetSecrets(conjur_workload_auth, secret_paths)
+secrets.response["conjur:variable:data/vault/mysafe/account/password"].get()
+
+# Fetch list of resources available
+secrets_list = ListSecrets(conjur_workload_auth)
+for resource in secrets_list.response:
+    resource
+```
+
+Working with Conjur Cloud JWT Authenticator:
+
+```python
+from ark_api.utils import Secret
+from ark_api.tokens import JwtToken, AppToken, ConjurWorkloadToken
+from ark_api.authorizations import JwtBearer, AppBearer, ConjurBearer
+from ark_api.conjur import RotateApiKey, GetSecret, GetSecrets, ListSecrets
+from getpass import getpass
+
+
+subdomain = input('Subdomain: ')
+username = input('Username: ')
+password = Secret(
+    getpass(f'{username} Password: ')
+)
+token = Secret(
+    getpass(f'Token: ')
+)
+
+# Use JWT Authenticator
+identifier = 'data/workloads/myworkload'
+jwt_token = JwtToken.from_string(token.get())
+authenticator = 'conjur_authenticator_name'
+jwt_auth = JwtBearer(jwt_token)
+
+# Get Conjur Workload Token and Authorization Object
+conjur_workload_token = ConjurWorkloadToken(jwt_auth, subdomain, identifier, authenticator)
+
+# Get Conjur Authorization Object
 conjur_workload_auth = ConjurBearer(conjur_workload_token)
 
 # Fetch single secret
