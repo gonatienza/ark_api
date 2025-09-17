@@ -4,13 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ark_api"
-version = "1.0.18"
+version = "1.0.19"
 description = "CyberArk API Collection"
 authors = [
   { name = "Gonzalo Atienza Rela", email = "gonatienza@gmail.com" }
 ]
 dependencies = [
-  "keyring",
   "pyjwt"
 ]
 requires-python = ">=3.8"

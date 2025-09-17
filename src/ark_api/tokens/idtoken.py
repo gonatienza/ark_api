@@ -10,7 +10,11 @@ class ConjurIdToken(ConjurToken):
     )
 
     def __init__(self, auth):
-        verify(auth, "Bearer", "auth must be Bearer")
+        verify(
+            auth,
+            ["PlatformBearer", "AppBearer"],
+            "auth must be PlatformBearer or AppBearer"
+        )
         api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
         params = {"id_token": auth.token.access_token.get()}
         headers = {
