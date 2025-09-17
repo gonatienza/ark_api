@@ -2,7 +2,6 @@ from .arktoken import ArkToken
 from ark_api.utils import verify, Secret
 from time import time
 import jwt
-import json
 
 
 class JwtToken(ArkToken):
