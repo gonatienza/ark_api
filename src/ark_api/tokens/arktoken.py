@@ -7,7 +7,6 @@ class ArkToken(ArkApiCall):
     def __init__(self):
         """
         Following attributes required:
-        _subdomain
         _access_token
         """
         pass

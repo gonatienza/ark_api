@@ -32,11 +32,9 @@ class JwtToken(ArkToken):
         return self._jwt
 
     @classmethod
-    def from_string(cls, subdomain, token_str):
-        verify(subdomain, "str", "subdomain must be str")
+    def from_string(cls, token_str):
         verify(token_str, "str", "token_str must be str")
         obj = cls.__new__(cls)
         obj._access_token = Secret(token_str)
-        obj._subdomain = subdomain
         obj._jwt = obj._get_unverified_claims(obj._access_token.get())
         return obj
