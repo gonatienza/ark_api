@@ -24,3 +24,10 @@ class PlatformToken(JwtToken):
         self._response = response.json()
         self._access_token = Secret(self._response["access_token"])
         self._jwt = self._get_unverified_claims(self._access_token.get())
+
+    @classmethod
+    def from_string(cls, subdomain, token_str):
+        verify(subdomain, "str", "subdomain must be str")
+        obj = super().from_string(token_str)
+        obj._subdomain = subdomain
+        return obj

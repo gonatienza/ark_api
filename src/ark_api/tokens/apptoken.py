@@ -83,3 +83,10 @@ class AppToken(JwtToken):
             params
         )
         return response
+
+    @classmethod
+    def from_string(cls, subdomain, token_str):
+        verify(subdomain, "str", "subdomain must be str")
+        obj = super().from_string(token_str)
+        obj._subdomain = subdomain
+        return obj
