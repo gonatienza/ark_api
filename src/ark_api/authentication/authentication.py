@@ -20,10 +20,7 @@ class Authentication(ArkApiCall):
         self._advance_api_path = self._API_PATH_FORMAT_ADVANCE.format(
             discovery.response["endpoint"]
         )
-        params = {
-            "Version": "1.0",
-            "User": username
-        }
+        params = {"Version": "1.0", "User": username}
         self._headers = {"Content-Type": "application/json"}
         self._method = "POST"
         response = api_call(
