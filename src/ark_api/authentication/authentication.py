@@ -32,6 +32,11 @@ class Authentication(ArkApiCall):
         self._response = response.json()
         if not self._response["success"]:
             raise APIError(self._response["Message"])
+        if "IdpRedirectUrl" in self._response["Result"]:
+            redirect_url = self._response["Result"]["IdpRedirectUrl"]
+            raise APIError(
+                f"received redirect to external IdP: {redirect_url}"
+            )
         self._responses = [self._response]
         self._session_id = self._response["Result"]["SessionId"]
         self._challenges = self._response["Result"]["Challenges"]
