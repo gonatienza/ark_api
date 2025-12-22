@@ -35,6 +35,7 @@ class Authentication(ArkApiCall):
         self._responses = [self._response]
         self._session_id = self._response["Result"]["SessionId"]
         self._challenges = self._response["Result"]["Challenges"]
+        self._advance_params = {}
         self._token = None
         self._terminated = False
 
@@ -58,20 +59,67 @@ class Authentication(ArkApiCall):
     def terminated(self):
         return self._terminated
 
-    def get_mechanisms(self, index):
-        verify(index, "int", "index must be int")
-        return self._challenges[index]["Mechanisms"]
+    def get_mechanisms(self, challenge_index):
+        verify(challenge_index, "int", "index must be int")
+        return self._challenges[challenge_index]["Mechanisms"]
 
-    def advance(self, params):
+    def _update_advance_params(self, response):
+        if not self._advance_params:
+            self._advance_params = {"SessionId": self._session_id}
+            self._advance_params.update(response)
+        elif "MultipleOperations" not in self._advance_params:
+            del self._advance_params["SessionId"]
+            self._advance_params = {
+                "SessionId": self._session_id,
+                "MultipleOperations": [self._advance_params]
+            }
+            self._advance_params["MultipleOperations"].append(response)
+        else:
+            self._advance_params["MultipleOperations"].update(response)
+
+    def add_answer(self, challenge_index, mechanism_index, answer):
+        verify(challenge_index, "int", "challenge_index must be int")
+        verify(mechanism_index, "int", "mechanism_index must be int")
+        verify(answer, "Secret", "answer must be Secret")
+        challenge = self._challenges[challenge_index]
+        mechanism = challenge["Mechanisms"][mechanism_index]
+        response = {
+            "MechanismId": mechanism["MechanismId"],
+            "Answer": answer.get(),
+            "Action": "Answer"
+        }
+        self._update_advance_params(response)
+
+    def add_oob(self, challenge_index, mechanism_index):
+        verify(challenge_index, "int", "challenge_index must be int")
+        verify(mechanism_index, "int", "mechanism_index must be int")
+        challenge = self._challenges[challenge_index]
+        mechanism = challenge["Mechanisms"][mechanism_index]
+        oob = {
+            "MechanismId": mechanism["MechanismId"],
+            "Action": "StartOOB"
+        }
+        self._update_advance_params(oob)
+
+    def advance(self, params=None):
+        if params:
+            verify(params, "dict", "params must be dict")
+            _params = params
+        else:
+            _params = self._advance_params
+            self._advance_params = {}
         if self._terminated:
-            raise APIError("authentication has terminated")
-        verify(params, "dict", "params must be dict")
+            raise APIError("authentication was terminated")
         _response = api_call(
-            self._advance_api_path, self._method, self._headers, params
+            self._advance_api_path,
+            self._method,
+            self._headers,
+            _params
         )
         response = _response.json()
         if not response["success"]:
             raise APIError(response["Message"])
+            self._terminated = True
         self._response = response
         self._responses.insert(0, self._response)
         if "Token" in self._response["Result"]:
@@ -79,3 +127,15 @@ class Authentication(ArkApiCall):
                 self._subdomain, self._response["Result"]["Token"]
             )
             self._terminated = True
+
+    def poll(self, challenge_index, mechanism_index):
+        verify(challenge_index, "int", "challenge_index must be int")
+        verify(mechanism_index, "int", "mechanism_index must be int")
+        challenge = self._challenges[challenge_index]
+        mechanism = challenge["Mechanisms"][mechanism_index]
+        self._advance_params = {
+            "Action": "Poll",
+            "SessionId": self._session_id,
+            "MechanismId": mechanism["MechanismId"]
+        }
+        self.advance()
