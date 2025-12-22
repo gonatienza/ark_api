@@ -1,4 +1,4 @@
-from ark_api.utils import verify, Secret, api_call
+from ark_api.utils import verify, api_call
 from ark_api.model import ArkApiCall
 from ark_api.discovery import Discovery
 from ark_api.exceptions import APIError
