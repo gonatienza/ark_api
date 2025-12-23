@@ -32,14 +32,68 @@ password = Secret(
    getpass(f'{username} Password: ')
 )
 
-# Get Platform Token
+# Get Platform Token from oath confidential client
 token = PlatformToken(subdomain, username, password)
 
-# Create Authorization Object
+# Create authorization object
 auth = PlatformBearer(token)
 
 # Fetch list of safes
 safes = Safes(auth)
+
+# List object
+safes.response['value']
+```
+
+Same example with interactive authentication and MFA
+
+```python
+from ark_api.utils import Secret
+from ark_api.authentication import Authentication
+from ark_api.authorizations import PlatformBearer
+from ark_api.safes import Safes
+from getpass import getpass
+from time import sleep
+
+
+subdomain = input('Subdomain: ')
+username = input('Username: ')
+password = Secret(
+   getpass(f'{username} Password: ')
+)
+
+# Initiate Authentication
+authn = Authentication(subdomain, username)
+
+# List Challenges Available
+authn.challenges
+
+# List all Challenges and Mechanisms
+for i, _ in enumerate(authn.challenges):
+    authn.get_mechanisms(i)
+
+# Add in band answer for first challenge and its first mechanism
+authn.add_answer(0, 0, password)
+
+# Add out of band second challenge and its third mechanism
+authn.add_oob(1, 2)
+
+# Advance the authentication process
+authn.advance()
+
+# Check state of out of band acceptance second challenge and its third mechanism
+while not authn.terminated:
+    authn.poll(1, 2)
+    sleep(1)
+
+# Alternatively, you can submit code in band for that second challenge and its third mechanism
+# authn.add_answer(1, 2, Secret("123456"))
+
+# Create authorization object with resulting token
+authz = PlatformBearer(authn.token)
+
+# Fetch list of safes
+safes = Safes(authz)
 
 # List object
 safes.response['value']
