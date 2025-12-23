@@ -45,7 +45,7 @@ safes = Safes(auth)
 safes.response['value']
 ```
 
-Same example with interactive authentication and MFA
+Same example with interactive authentication and MFA:
 
 ```python
 from ark_api.utils import Secret
