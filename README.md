@@ -65,10 +65,10 @@ password = Secret(
 # Initiate Authentication
 authn = Authentication(subdomain, username)
 
-# List Challenges Available
+# List challenges available
 authn.challenges
 
-# List all Challenges and Mechanisms
+# List all mechanisms for each challenge
 for i, _ in enumerate(authn.challenges):
     authn.get_mechanisms(i)
 
