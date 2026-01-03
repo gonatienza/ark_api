@@ -4,16 +4,13 @@ class _SecretReprMixin:
 
 
 class SecretStr(_SecretReprMixin, str):
-    def __str__(self):
-        return super().__str__()
-
     def get(self):
-        return super().__str__()
+        return self.__str__()
 
 
 class SecretBytes(_SecretReprMixin, bytes):
     def get(self):
-        return super().__bytes__()
+        return self.__bytes__()
 
 
 class Secret:
@@ -23,6 +20,9 @@ class Secret:
             self._secret = SecretStr(value)
         elif isinstance(value, bytes):
             self._secret = SecretBytes(value)
+
+    def __repr__(self):
+        return self._secret.__repr__()
 
     def get(self):
         return self._secret.get()
