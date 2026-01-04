@@ -29,14 +29,12 @@ class PlatformBearer(JwtBearer):
     def __init__(self, token):
         verify(token, "PlatformToken", "token must be PlatformToken")
         super().__init__(token)
-        self._token = token
 
 
 class AppBearer(JwtBearer):
     def __init__(self, token):
         verify(token, "AppToken", "token must be AppToken")
         super().__init__(token)
-        self._token = token
 
 
 class ConjurBearer(Bearer):
