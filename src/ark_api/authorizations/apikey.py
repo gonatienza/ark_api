@@ -6,7 +6,11 @@ from ark_api.utils import verify
 class ApiKey(ArkAuthorization):
     @abstractmethod
     def __init__(self):
-        pass
+        """
+        Following attributes required:
+        _header
+        _api_key
+        """
 
     @property
     def api_key(self):

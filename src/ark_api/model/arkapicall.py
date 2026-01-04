@@ -8,7 +8,6 @@ class ArkApiCall(ABC):
         Following attributes required:
         _response
         """
-        pass
 
     @property
     def response(self):

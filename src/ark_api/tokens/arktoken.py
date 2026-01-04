@@ -9,7 +9,6 @@ class ArkToken(ArkApiCall):
         Following attributes required:
         _access_token
         """
-        pass
 
     @property
     def access_token(self):
