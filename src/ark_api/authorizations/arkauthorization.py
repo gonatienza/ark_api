@@ -8,7 +8,6 @@ class ArkAuthorization(ABC):
         Following attributes required:
         _header
         """
-        pass
 
     @property
     def header(self):
