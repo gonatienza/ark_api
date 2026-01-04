@@ -9,6 +9,7 @@ class JwtToken(ArkToken):
         """
         Following attributes required:
         _access_token
+        _subdomain
         _jwt
         """
         pass
@@ -26,6 +27,10 @@ class JwtToken(ArkToken):
         if now > self._jwt["exp"]:
             return False
         return True
+
+    @property
+    def subdomain(self):
+        return self._subdomain
 
     @property
     def jwt(self):

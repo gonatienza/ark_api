@@ -1,16 +1,18 @@
+from .verify import verify
+from .logger import Logger
 from ark_api.exceptions import APIError
-from ark_api.utils import (
-    mask_secrets_from_dict,
-    mask_secrets_from_bytes,
-    verify
-)
-from urllib import request, parse
+from ark_api import __version__ as ark_api_version
+from urllib import request, parse, error
 import json
 
 
 class ApiResponse:
     def __init__(self, response):
-        verify(response, "HTTPResponse", "response must be HTTPResponse")
+        verify(
+            response,
+            ["HTTPResponse", "HTTPError"],
+            "response must be HTTPResponse or HTTPError"
+        )
         self._response = response
         self._response_bytes = self._response.read()
 
@@ -20,6 +22,14 @@ class ApiResponse:
     def json(self):
         return json.loads(self.text())
 
+    @property
+    def response(self):
+        return self._response
+
+    @property
+    def response_bytes(self):
+        return self._response_bytes
+
 
 def api_call(api_path, method, headers, params={}, data=b""):
     verify(api_path, "str", "api_path must be str")
@@ -27,6 +37,7 @@ def api_call(api_path, method, headers, params={}, data=b""):
     verify(headers, "dict", "headers must be dict")
     verify(params, "dict", "params must be dict")
     verify(data, "bytes", "data must be bytes")
+    headers["User-Agent"] = f"{__name__}/{ark_api_version}"
     if params:
         assert "Content-Type" in headers, "Content-Type required"
         if "x-www-form-urlencoded" in headers["Content-Type"]:
@@ -39,30 +50,16 @@ def api_call(api_path, method, headers, params={}, data=b""):
         headers=headers,
         method=method
     )
+    Logger.debug_out_req(req)
     try:
-        return ApiResponse(request.urlopen(req))
+        _res = request.urlopen(req)
+        res = ApiResponse(_res)
+        Logger.debug_in_res(res)
+        return res
+    except error.HTTPError as e:
+        res = ApiResponse(e)
+        Logger.debug_in_res(res)
+        raise APIError(str(e))
     except Exception as e:
-        if params:
-            _params = mask_secrets_from_dict(params)
-        else:
-            _params = None
-        if data:
-            _data = mask_secrets_from_bytes(data)
-        else:
-            _data = None
-        _headers = mask_secrets_from_dict(headers)
-        message_list = [
-            f"error: {str(e)}",
-            f"api_path: '{api_path}'",
-            f"headers: {_headers}",
-            f"method: '{method}'",
-            f"params: {_params}",
-            f"data: {_data}"
-        ]
-        if hasattr(e, "read"):
-            try:
-                response = e.read().decode()
-            except Exception:
-                response = "<unreadable>"
-            message_list.append(f"response: {response}")
-        raise APIError("\n".join(message_list))
+        Logger.debug(str(e))
+        raise APIError(str(e))

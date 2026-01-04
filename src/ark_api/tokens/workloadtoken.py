@@ -1,6 +1,5 @@
 from .conjurtoken import ConjurToken
-from ark_api.utils import verify, SecretBytes, api_call
-from time import time
+from ark_api.utils import verify, api_call
 from urllib.parse import quote
 
 
@@ -31,7 +30,7 @@ class ConjurWorkloadToken(ConjurToken):
                 self._subdomain,
                 quote(f"host/{identifier}", safe=""),
             )
-            data = SecretBytes(auth.api_key.get().encode())
+            data = auth.api_key.get().encode()
             params = {}
         elif auth.__class__.__name__ == "JwtBearer":
             api_path = self._API_PATH_FORMAT_AUHTENTICATOR.format(
@@ -52,19 +51,5 @@ class ConjurWorkloadToken(ConjurToken):
         super().__init__()
 
     @property
-    def access_token(self):
-        return self._access_token
-
-    @property
-    def protected(self):
-        return self._protected
-
-    @property
-    def payload(self):
-        return self._payload
-
-    def is_valid(self):
-        now = time()
-        if now > self._payload["exp"]:
-            return False
-        return True
+    def subdomain(self):
+        return self._subdomain

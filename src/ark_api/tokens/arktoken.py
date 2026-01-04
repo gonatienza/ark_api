@@ -12,9 +12,5 @@ class ArkToken(ArkApiCall):
         pass
 
     @property
-    def subdomain(self):
-        return self._subdomain
-
-    @property
     def access_token(self):
         return self._access_token
