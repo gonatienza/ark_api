@@ -50,16 +50,16 @@ def api_call(api_path, method, headers, params={}, data=b""):
         headers=headers,
         method=method
     )
-    Logger.debug_out_req(req)
+    Logger.log_req(req)
     try:
         _res = request.urlopen(req)
         res = ApiResponse(_res)
-        Logger.debug_in_res(res)
+        Logger.log_res(res)
         return res
     except error.HTTPError as e:
         res = ApiResponse(e)
-        Logger.debug_in_res(res)
-        raise APIError(str(e))
+        Logger.log_res(res)
+        raise APIError(str(e)) from None
     except Exception as e:
-        Logger.debug(str(e))
-        raise APIError(str(e))
+        Logger.error(str(e))
+        raise APIError(str(e)) from None
