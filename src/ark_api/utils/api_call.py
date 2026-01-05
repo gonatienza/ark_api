@@ -61,5 +61,4 @@ def api_call(api_path, method, headers, params={}, data=b""):
         Logger.log_res(res)
         raise APIError(str(e)) from None
     except Exception as e:
-        Logger.error(str(e))
         raise APIError(str(e)) from None
