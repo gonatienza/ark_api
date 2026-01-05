@@ -1,20 +1,23 @@
 import logging
-import json
 import sys
 import os
 
 
 class Logger:
     _DEBUG_ENV_VARIABLE = "ARK_API_LOGGING"
-    _DEBUG_ENV_VARIABLE_VALUES = {"debug": logging.DEBUG}
+    _DEBUG_ENV_VARIABLE_VALUES = {
+        "error": logging.ERROR,
+        "info": logging.INFO,
+        "debug": logging.DEBUG
+    }
     _name = __name__
     _logger = logging.getLogger(_name)
     _ark_api_logging = os.getenv(_DEBUG_ENV_VARIABLE)
     if _ark_api_logging in _DEBUG_ENV_VARIABLE_VALUES:
-        level = _DEBUG_ENV_VARIABLE_VALUES[_ark_api_logging]
+        _level = _DEBUG_ENV_VARIABLE_VALUES[_ark_api_logging]
     else:
-        level = logging.INFO
-    _logger.setLevel(level)
+        _level = logging.ERROR
+    _logger.setLevel(_level)
     _formatter = logging.Formatter(
         f"[{_name}] %(levelname)s: %(message)s"
     )
@@ -23,26 +26,30 @@ class Logger:
     _logger.addHandler(_stream_handler)
 
     @classmethod
-    def debug_out_req(cls, req):
-        message = (
-            "[OUTBOUND REQUEST] ->\n"
-            f"api_path: '{req.full_url}'\n"
-            f"headers: {json.dumps(req.headers, indent=4)}\n"
-            f"method: {req.method}\n"
-            f"data: {req.data}"
-        )
-        cls._logger.debug(message)
+    def log_req(cls, req):
+        cls._logger.info("[OUTBOUND REQUEST] ->")
+        cls._logger.info(f"api_path: {req.full_url}")
+        for header, value in req.headers.items():
+            cls._logger.info(f"header: {header}: {value}")
+        cls._logger.info(f"method: {req.method}")
+        cls._logger.debug(f"data: {req.data}")
 
     @classmethod
-    def debug_in_res(cls, res):
+    def log_res(cls, res):
+        cls._logger.info("[INBOUND RESPONSE] ->")
+        cls._logger.info(f"code: {res.response.code} {res.response.msg}")
         headers = {k: v for k, v in res.response.headers.items()}
-        message = (
-            "[INBOUND RESPONSE] ->\n"
-            f"code: {res.response.code} {res.response.msg}\n"
-            f"headers: {json.dumps(headers, indent=4)}\n"
-            f"data: {res.response_bytes}"
-        )
-        cls._logger.debug(message)
+        for header, value in headers.items():
+            cls._logger.info(f"header: {header}: {value}")
+        cls._logger.debug(f"data: {res.response_bytes}")
+
+    @classmethod
+    def error(cls, message):
+        return cls._logger.error(message)
+
+    @classmethod
+    def info(cls, message):
+        return cls._logger.info(message)
 
     @classmethod
     def debug(cls, message):
