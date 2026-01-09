@@ -9,7 +9,7 @@ class ConjurIdToken(ConjurToken):
         "authn-oidc/cyberark/conjur/authenticate"
     )
 
-    def __init__(self, auth):
+    def __init__(self, auth, subdomain):
         verify(
             auth,
             ["PlatformBearer", "AppBearer"],
@@ -22,6 +22,6 @@ class ConjurIdToken(ConjurToken):
             "Accept-Encoding": "base64"
         }
         method = "POST"
-        self._subdomain = auth.token.subdomain
+        self._subdomain = subdomain
         self._response = api_call(api_path, method, headers, params)
         super().__init__()

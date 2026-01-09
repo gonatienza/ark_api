@@ -23,7 +23,7 @@ class Logger:
         if not cls._enabled:
             return
         cls._logger.debug("[OUTBOUND REQUEST]")
-        cls._logger.debug(f"api_path: {req.full_url}")
+        cls._logger.debug(f"api_path: {req.url}")
         for header, value in req.headers.items():
             cls._logger.debug(f"header: {header}: {value}")
         cls._logger.debug(f"method: {req.method}")
@@ -34,11 +34,11 @@ class Logger:
         if not cls._enabled:
             return
         cls._logger.debug("[INBOUND RESPONSE]")
-        cls._logger.debug(f"code: {res.response.code} {res.response.msg}")
-        headers = {k: v for k, v in res.response.headers.items()}
+        cls._logger.debug(f"code: {res.status} {res.status_msg}")
+        headers = {k: v for k, v in res.headers.items()}
         for header, value in headers.items():
             cls._logger.debug(f"header: {header}: {value}")
-        cls._logger.debug(f"data: {res.response_bytes}")
+        cls._logger.debug(f"data: {res.data}")
 
     @classmethod
     def debug(cls, message):
