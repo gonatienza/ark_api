@@ -1,6 +1,6 @@
 from .verify import verify
 from .arkapiclient import ArkApiClient
-from urllib import parse
+from urllib.parse import urlencode
 import json
 
 
@@ -13,7 +13,7 @@ def api_call(api_path, method, headers, params={}, data=b""):
     if params:
         assert "Content-Type" in headers, "Content-Type required"
         if "x-www-form-urlencoded" in headers["Content-Type"]:
-            data = parse.urlencode(params).encode()
+            data = urlencode(params).encode()
         elif "application/json" in headers["Content-Type"]:
             data = json.dumps(params).encode()
     return ArkApiClient.call(api_path, method, headers, data)
