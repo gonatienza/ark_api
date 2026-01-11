@@ -1,7 +1,7 @@
 from ark_api.utils import verify, api_call
 from ark_api.model import ArkApiCall
 from ark_api.discovery import Discovery
-from ark_api.exceptions import APIError
+from ark_api.exceptions import ArkApiError
 from ark_api.tokens import PlatformToken
 
 
@@ -28,10 +28,10 @@ class Authentication(ArkApiCall):
         )
         self._response = response.json()
         if not self._response["success"]:
-            raise APIError(self._response["Message"])
+            raise ArkApiError(self._response["Message"])
         if "IdpRedirectUrl" in self._response["Result"]:
             redirect_url = self._response["Result"]["IdpRedirectUrl"]
-            raise APIError(
+            raise ArkApiError(
                 f"received redirect to external IdP: {redirect_url}"
             )
         self._responses = [self._response]
@@ -111,7 +111,7 @@ class Authentication(ArkApiCall):
             _params = self._advance_params
             self._advance_params = {}
         if self._terminated:
-            raise APIError("authentication was terminated")
+            raise ArkApiError("authentication was terminated")
         _response = api_call(
             self._advance_api_path,
             self._method,
@@ -120,7 +120,7 @@ class Authentication(ArkApiCall):
         )
         response = _response.json()
         if not response["success"]:
-            raise APIError(response["Message"])
+            raise ArkApiError(response["Message"])
             self._terminated = True
         self._response = response
         self._responses.insert(0, self._response)

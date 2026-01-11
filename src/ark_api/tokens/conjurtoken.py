@@ -14,6 +14,7 @@ class ConjurToken(ArkToken):
     def __init__(self):
         """
         Following attributes required:
+        _subdomain
         _response
         """
         self._access_token = Secret(self._response.text())
@@ -27,6 +28,16 @@ class ConjurToken(ArkToken):
         payload_str = payload_bytes.decode()
         self._payload = json.loads(payload_str)
 
+    def is_valid(self):
+        now = time()
+        if now > self._payload["exp"]:
+            return False
+        return True
+
+    @property
+    def subdomain(self):
+        return self._subdomain
+
     @property
     def access_token(self):
         return self._access_token
@@ -38,9 +49,3 @@ class ConjurToken(ArkToken):
     @property
     def payload(self):
         return self._payload
-
-    def is_valid(self):
-        now = time()
-        if now > self._payload["exp"]:
-            return False
-        return True

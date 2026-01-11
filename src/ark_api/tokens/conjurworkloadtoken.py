@@ -19,7 +19,6 @@ class ConjurWorkloadToken(ConjurToken):
             ["ConjurApiKey", "JwtBearer"],
             "auth must be ConjurApiKey or JwtBearer"
         )
-        verify(auth, "JwtBearer", "auth must be JwtBearer")
         verify(subdomain, "str", "subdomain must be str")
         verify(identifier, "str", "identifier must be str")
         verify(authenticator, "str", "authenticator must be str")
@@ -49,7 +48,3 @@ class ConjurWorkloadToken(ConjurToken):
             data=data
         )
         super().__init__()
-
-    @property
-    def subdomain(self):
-        return self._subdomain

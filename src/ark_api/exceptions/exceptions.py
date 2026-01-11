@@ -5,7 +5,7 @@ class ArkApiError(Exception):
     pass
 
 
-class APIError(ArkApiError):
+class ArkApiClientError(ArkApiError):
     """
     API Error
     """
