@@ -33,7 +33,3 @@ class ArkApiResponse:
     @property
     def data(self):
         return self._response.data
-
-    @property
-    def ok(self):
-        return self._ok
