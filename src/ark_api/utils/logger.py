@@ -23,7 +23,7 @@ class Logger:
         if not cls._enabled:
             return
         cls._logger.debug("[OUTBOUND REQUEST]")
-        cls._logger.debug(f"api_path: {req.url}")
+        cls._logger.debug(f"url: {req.url}")
         for header, value in req.headers.items():
             cls._logger.debug(f"header: {header}: {value}")
         cls._logger.debug(f"method: {req.method}")
