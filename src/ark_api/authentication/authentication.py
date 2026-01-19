@@ -61,6 +61,12 @@ class Authentication(ArkApiCall):
     def terminated(self):
         return self._terminated
 
+    def requires_mfa(self):
+        if len(self._challenges) > 1:
+            return True
+        else:
+            return False
+
     def get_mechanisms(self, challenge_index):
         verify(challenge_index, "int", "index must be int")
         return self._challenges[challenge_index]["Mechanisms"]
