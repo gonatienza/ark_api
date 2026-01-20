@@ -165,10 +165,6 @@ from getpass import getpass
 
 
 subdomain = input('Subdomain: ')
-username = input('Username: ')
-password = Secret(
-    getpass(f'{username} Password: ')
-)
 token = Secret(
     getpass(f'Token: ')
 )
