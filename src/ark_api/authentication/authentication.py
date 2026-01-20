@@ -126,8 +126,8 @@ class Authentication(ArkApiCall):
         )
         response = _response.json()
         if not response["success"]:
-            raise ArkApiError(response["Message"])
             self._terminated = True
+            raise ArkApiError(response["Message"])
         self._response = response
         self._responses.insert(0, self._response)
         if "Token" in self._response["Result"]:
