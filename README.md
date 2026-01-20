@@ -99,7 +99,7 @@ safes = Safes(authz)
 safes.response['value']
 ```
 
-Working with Conjur Cloud:
+Working with Secrets Manager SaaS (aka Conjur Cloud):
 
 ```python
 from ark_api.utils import Secret
@@ -154,7 +154,7 @@ for resource in secrets_list.response:
     resource
 ```
 
-Working with Conjur Cloud JWT Authenticator:
+Working with Secrets Manager SaaS (aka Conjur Cloud) JWT Authenticator:
 
 ```python
 from ark_api.utils import Secret
