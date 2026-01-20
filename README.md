@@ -158,9 +158,9 @@ Working with Conjur Cloud JWT Authenticator:
 
 ```python
 from ark_api.utils import Secret
-from ark_api.tokens import JwtToken, AppToken, ConjurWorkloadToken
-from ark_api.authorizations import JwtBearer, AppBearer, ConjurBearer
-from ark_api.conjur import RotateApiKey, GetSecret, GetSecrets, ListSecrets
+from ark_api.tokens import JwtToken, ConjurWorkloadToken
+from ark_api.authorizations import JwtBearer, ConjurBearer
+from ark_api.conjur import GetSecret, GetSecrets, ListSecrets
 from getpass import getpass
 
 
