@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ark_api"
-version = "1.0.34"
+version = "1.0.35"
 description = "CyberArk API Collection"
 authors = [
   { name = "Gonzalo Atienza Rela", email = "gonatienza@gmail.com" }
@@ -23,3 +23,6 @@ package-dir = { "" = "src" }
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["ark_api", "ark_api.*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "S"]

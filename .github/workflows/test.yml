@@ -20,7 +20,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install ruff
       - name: Run Ruff
-        run: ruff check . --select E501
+        run: ruff check .
 
   linux:
     runs-on: ubuntu-latest

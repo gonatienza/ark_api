@@ -7,12 +7,12 @@ def _verify(obj, class_name):
 
 
 def verify(obj, class_name, error_message=""):
-    assert isinstance(obj, object), "obj must be object"
-    assert isinstance(
-        class_name,
-        (str, list)
-    ), "class_name must be str or list"
-    assert isinstance(error_message, str), "error_message must be str"
+    if not isinstance(obj, object):
+        raise TypeError("obj must be object")
+    if not isinstance(class_name, (str, list)):
+        raise TypeError("class_name must be str or list")
+    if not isinstance(error_message, str):
+        raise TypeError("error_message must be str")
     if isinstance(class_name, str):
         if _verify(obj, class_name):
             return
@@ -25,4 +25,4 @@ def verify(obj, class_name, error_message=""):
             f"<{obj.__class__.__module__}.{obj.__class__.__qualname__}"
             f" object at {hex(id(obj))}> is not '{class_name}'"
         )
-    raise AssertionError(error_message)
+    raise TypeError(error_message)

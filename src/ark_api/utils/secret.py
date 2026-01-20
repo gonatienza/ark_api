@@ -15,7 +15,8 @@ class SecretBytes(_SecretReprMixin, bytes):
 
 class Secret:
     def __init__(self, value):
-        assert isinstance(value, (str, bytes)), "value must be str or bytes"
+        if not isinstance(value, (str, bytes)):
+            raise TypeError("value must be str or bytes")
         if isinstance(value, str):
             self._secret = SecretStr(value)
         elif isinstance(value, bytes):
