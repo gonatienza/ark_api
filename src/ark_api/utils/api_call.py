@@ -11,7 +11,8 @@ def api_call(api_path, method, headers, params={}, data=b""):
     verify(params, "dict", "params must be dict")
     verify(data, "bytes", "data must be bytes")
     if params:
-        assert "Content-Type" in headers, "Content-Type required"
+        if "Content-Type" not in headers:
+            raise ValueError("Content-Type required")
         if "x-www-form-urlencoded" in headers["Content-Type"]:
             data = urlencode(params).encode()
         elif "application/json" in headers["Content-Type"]:

@@ -5,9 +5,9 @@ from ark_api.authorizations import Basic, AppBearer
 
 
 class AppToken(JwtToken):
-    _GEN_TOKEN = "token"
-    _INTROSPECT_TOKEN = "introspect"
-    _REVOKE_TOKEN = "revoke"
+    _GEN_TOKEN = "token" # noqa S105
+    _INTROSPECT_TOKEN = "introspect" # noqa S105
+    _REVOKE_TOKEN = "revoke" # noqa S105
     _API_PATH_FORMAT = "{}/oauth2/{}/{}"
 
     def __init__(self, app_id, scope, subdomain, username, password):
