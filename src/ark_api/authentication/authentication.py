@@ -71,6 +71,10 @@ class Authentication(ArkApiCall):
         verify(challenge_index, "int", "index must be int")
         return self._challenges[challenge_index]["Mechanisms"]
 
+    def _raise_if_terminated(self):
+        if self._terminated:
+            raise ArkApiError("authentication was terminated")
+
     def _update_advance_params(self, response):
         if not self._advance_params:
             self._advance_params = {"SessionId": self._session_id}
@@ -81,11 +85,13 @@ class Authentication(ArkApiCall):
                 "SessionId": self._session_id,
                 "MultipleOperations": [self._advance_params]
             }
-            self._advance_params["MultipleOperations"].append(response)
+        if "MultipleOperations" not in self._advance_params:
+            self._advance_params.update(response)
         else:
-            self._advance_params["MultipleOperations"].update(response)
+            self._advance_params["MultipleOperations"].append(response)
 
     def add_answer(self, challenge_index, mechanism_index, answer):
+        self._raise_if_terminated()
         verify(challenge_index, "int", "challenge_index must be int")
         verify(mechanism_index, "int", "mechanism_index must be int")
         verify(answer, "Secret", "answer must be Secret")
@@ -99,6 +105,7 @@ class Authentication(ArkApiCall):
         self._update_advance_params(response)
 
     def add_oob(self, challenge_index, mechanism_index):
+        self._raise_if_terminated()
         verify(challenge_index, "int", "challenge_index must be int")
         verify(mechanism_index, "int", "mechanism_index must be int")
         challenge = self._challenges[challenge_index]
@@ -109,15 +116,9 @@ class Authentication(ArkApiCall):
         }
         self._update_advance_params(oob)
 
-    def advance(self, params=None):
-        if params:
-            verify(params, "dict", "params must be dict")
-            _params = params
-        else:
-            _params = self._advance_params
-            self._advance_params = {}
-        if self._terminated:
-            raise ArkApiError("authentication was terminated")
+    def advance(self):
+        self._raise_if_terminated()
+        _params = self._advance_params
         _response = api_call(
             self._advance_api_path,
             self._method,
@@ -128,6 +129,7 @@ class Authentication(ArkApiCall):
         if not response["success"]:
             self._terminated = True
             raise ArkApiError(response["Message"])
+        self._advance_params = {}
         self._response = response
         self._responses.insert(0, self._response)
         if "Token" in self._response["Result"]:
@@ -137,6 +139,7 @@ class Authentication(ArkApiCall):
             self._terminated = True
 
     def poll(self, challenge_index, mechanism_index):
+        self._raise_if_terminated()
         verify(challenge_index, "int", "challenge_index must be int")
         verify(mechanism_index, "int", "mechanism_index must be int")
         challenge = self._challenges[challenge_index]
