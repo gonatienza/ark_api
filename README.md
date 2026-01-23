@@ -22,7 +22,7 @@ Listing safes:
 from ark_api.utils import Secret
 from ark_api.tokens import PlatformToken
 from ark_api.authorizations import PlatformBearer
-from ark_api.safes import Safes
+from ark_api.pcloud import Safes
 from getpass import getpass
 
 
@@ -51,7 +51,7 @@ Same example with interactive authentication and MFA:
 from ark_api.utils import Secret
 from ark_api.authentication import Authentication
 from ark_api.authorizations import PlatformBearer
-from ark_api.safes import Safes
+from ark_api.pcloud import Safes
 from getpass import getpass
 from time import sleep
 

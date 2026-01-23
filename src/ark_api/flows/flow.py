@@ -1,6 +1,7 @@
 from ark_api.model import ArkApiCall
 from ark_api.utils import api_call
 from ark_api.utils import verify
+from ark_api.exceptions import ArkApiError
 from urllib.parse import urlparse
 
 
@@ -35,7 +36,7 @@ class Flow(ArkApiCall):
     def run_id(self):
         return self._run_id
 
-    def _call_flow(self, url, params):
+    def _call_flow(self, url, params={}):
         headers = {
             **self._auth.header,
             "Content-Type": "application/json"
@@ -48,7 +49,7 @@ class Flow(ArkApiCall):
         )
         return response.json()
 
-    def play(self, params=None):
+    def play(self, params={}):
         response = self._call_flow(self._play_flow_url, params)
         self._run_id = response["run_id"]
         self._started = True
@@ -59,16 +60,16 @@ class Flow(ArkApiCall):
             url = f"{self._flow_url}/{self._run_id}/{self._STATUS_PATH}"
             return self._call_flow(url)
         else:
-            raise RuntimeError(
+            raise ArkApiError(
                 f"No running job id. Must call "
                 f"{self.__class__.__name__}.play() first"
             )
 
     def stop(self):
         status = self.status()
-        _status = status.status
+        _status = status["status"]
         if _status == 'running':
             url = f"{self._flows_url}/{self._run_id}/{self._STOP_PATH}"
             return self._call_flow(url)
         else:
-            raise RuntimeError(f"Invalid job status: '{_status}'")
+            raise ArkApiError(f"Invalid job status: '{_status}'")
