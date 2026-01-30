@@ -36,7 +36,6 @@ class ArkApiClient:
             Logger.log_res(res)
         except Exception as e:
             raise ArkApiClientError(str(e)) from None
-        if res.is_ok():
-            return res
-        else:
+        if not res.is_ok():
             raise ArkApiClientError(f"{res.status} - {res.status_msg}")
+        return res
