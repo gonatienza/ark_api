@@ -11,11 +11,12 @@ class ArkApiClient:
     http = PoolManager()
 
     @classmethod
-    def call(cls, api_path, method, headers, data):
+    def call(cls, api_path, method, headers, data, **kwargs):
         verify(api_path, "str", "api_path must be str")
         verify(method, "str", "method must be str")
         verify(headers, "dict", "headers must be dict")
         verify(data, "bytes", "data must be bytes")
+        verify(kwargs, "dict", "kwargs must be dict")
         headers["User-Agent"] = f"{__name__}/{ark_api_version}"
         req = ArkApiRequest(
             url=api_path,
@@ -30,7 +31,8 @@ class ArkApiClient:
                 url=req.url,
                 body=req.data,
                 headers=req.headers,
-                timeout=Timeout(connect=5.0, read=10.0)
+                timeout=Timeout(connect=5.0, read=10.0),
+                **kwargs
             )
             res = ArkApiResponse(_res)
             Logger.log_res(res)

@@ -4,12 +4,13 @@ from urllib.parse import urlencode
 import json
 
 
-def api_call(api_path, method, headers, params={}, data=b""):
+def api_call(api_path, method, headers, params={}, data=b"", **kwargs):
     verify(api_path, "str", "api_path must be str")
     verify(method, "str", "method must be str")
     verify(headers, "dict", "headers must be dict")
     verify(params, "dict", "params must be dict")
     verify(data, "bytes", "data must be bytes")
+    verify(kwargs, "dict", "kwargs must be dict")
     if params:
         if "Content-Type" not in headers:
             raise ValueError("Content-Type required")
@@ -17,4 +18,4 @@ def api_call(api_path, method, headers, params={}, data=b""):
             data = urlencode(params).encode()
         elif "application/json" in headers["Content-Type"]:
             data = json.dumps(params).encode()
-    return ArkApiClient.call(api_path, method, headers, data)
+    return ArkApiClient.call(api_path, method, headers, data, **kwargs)
