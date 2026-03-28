@@ -27,7 +27,7 @@ class GetPlatform(ArkApiCall):
 
     def __init__(self, auth, platform_id):
         verify(auth, "PlatformBearer", "auth must be PlatformBearer")
-        verify(platform_id, "str", "auth must be str")
+        verify(platform_id, "str", "platform_id must be str")
         api_path = self._API_PATH_FORMAT.format(auth.token.subdomain, platform_id)
         headers = {
             **auth.header,
@@ -46,7 +46,7 @@ class ExportPlatform(ArkApiCall):
 
     def __init__(self, auth, platform_id):
         verify(auth, "PlatformBearer", "auth must be PlatformBearer")
-        verify(platform_id, "str", "auth must be str")
+        verify(platform_id, "str", "platform_id must be str")
         api_path = self._API_PATH_FORMAT.format(auth.token.subdomain, platform_id)
         headers = {
             **auth.header,
