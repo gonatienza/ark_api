@@ -7,4 +7,4 @@ from .bearer import (
     JwtBearer,
     EpmBearer
 )
-from .apikey import FlowsApiKey, ConjurApiKey
+from .apikey import FlowsApiKey, ConjurApiKey, AuditApiKey

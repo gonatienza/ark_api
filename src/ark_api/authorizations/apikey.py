@@ -29,3 +29,10 @@ class ConjurApiKey(ApiKey):
         verify(api_key, "Secret", "api_key must be Secret")
         self._api_key = api_key
         self._header = {}
+
+
+class AuditApiKey(ApiKey):
+    def __init__(self, api_key):
+        verify(api_key, "Secret", "api_key must be Secret")
+        self._api_key = api_key
+        self._header = {"x-api-key": self._api_key.get()}
