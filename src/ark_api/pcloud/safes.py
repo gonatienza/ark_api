@@ -34,8 +34,7 @@ class Safes(ArkApiCall):
     def is_next_link(self):
         if "nextLink" in self._response:
             return True
-        else:
-            return False
+        return False
 
     def get_next_link(self):
         if self.is_next_link():
