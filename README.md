@@ -194,7 +194,7 @@ secret_paths = [
 ]
 secrets = GetSecrets(conjur_workload_auth, secret_paths)
 for secret in secret_paths:
-    secrets.response[f"conjur:variable:{secret}"].get()
+    secrets.response[secret].get()
 
 # Fetch list of resources available
 secrets_list = ListSecrets(conjur_workload_auth)

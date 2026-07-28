@@ -36,6 +36,7 @@ class GetSecret(ArkApiCall):
 
 class GetSecrets(ArkApiCall):
     _API_PATH_FORMAT = "https://{}.secretsmgr.cyberark.cloud/api/secrets"
+    _PREFIX = "conjur:variable:"
 
     def __init__(self, auth, secrets):
         verify(auth, "ConjurBearer", "auth must be ConjurBearer")
@@ -44,7 +45,7 @@ class GetSecrets(ArkApiCall):
             verify(secret, "str", "secret must be str")
         _api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
         variable_ids_list = [
-            f"conjur:variable:{secret}"
+            self._PREFIX + secret
             for secret in secrets
         ]
         variable_ids = ",".join(variable_ids_list)
@@ -55,6 +56,6 @@ class GetSecrets(ArkApiCall):
         response = api_call(api_path, method, headers)
         json_response = response.json()
         self._response = {
-            item: Secret(json_response[item])
+            item.lstrip(self._PREFIX): Secret(json_response[item])
             for item in json_response
         }
