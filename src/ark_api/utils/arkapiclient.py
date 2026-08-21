@@ -5,10 +5,17 @@ from .arkapiresponse import ArkApiResponse
 from ark_api import __version__ as ark_api_version
 from ark_api.exceptions import ArkApiClientError
 from urllib3 import PoolManager, Timeout
-
+import os
 
 class ArkApiClient:
-    http = PoolManager()
+    _VERIFY_CERT_ENV_VARIABLE = "ARK_VERIFY_CERT"
+    _VERIFY_CERT_ENV_VARIABLE_DISABLED = ["0", "false", "no"]
+    _verify_cert = os.getenv(_VERIFY_CERT_ENV_VARIABLE, "yes")
+    _verify_cert_disabled = _verify_cert.lower() in _VERIFY_CERT_ENV_VARIABLE_DISABLED
+    if _verify_cert_disabled:
+        http = PoolManager(cert_reqs="CERT_NONE", assert_hostname=False)
+    else:
+        http = PoolManager()
 
     @classmethod
     def call(cls, api_path, method, headers, data, **kwargs):
