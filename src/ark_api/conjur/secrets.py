@@ -5,11 +5,11 @@ from urllib.parse import quote, urlencode
 
 
 class ListSecrets(ArkApiCall):
-    _API_PATH_FORMAT = "https://{}.secretsmgr.cyberark.cloud/api/resources"
+    _API_PATH_FORMAT = "https://{}/api/resources"
 
     def __init__(self, auth):
         verify(auth, "ConjurBearer", "auth must be ConjurBearer")
-        api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
+        api_path = self._API_PATH_FORMAT.format(auth.token.endpoint)
         headers = auth.header
         method = "GET"
         response = api_call(api_path, method, headers)
@@ -17,15 +17,12 @@ class ListSecrets(ArkApiCall):
 
 
 class GetSecret(ArkApiCall):
-    _API_PATH_FORMAT = (
-        "https://{}.secretsmgr.cyberark.cloud/api/"
-        "secrets/conjur/variable"
-    )
+    _API_PATH_FORMAT = ("https://{}/api/secrets/conjur/variable")
 
     def __init__(self, auth, secret):
         verify(auth, "ConjurBearer", "auth must be ConjurBearer")
         verify(secret, "str", "secret must be str")
-        _api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
+        _api_path = self._API_PATH_FORMAT.format(auth.token.endpoint)
         _params = quote(secret)
         api_path = f"{_api_path}/{_params}"
         headers = auth.header
@@ -35,7 +32,7 @@ class GetSecret(ArkApiCall):
 
 
 class GetSecrets(ArkApiCall):
-    _API_PATH_FORMAT = "https://{}.secretsmgr.cyberark.cloud/api/secrets"
+    _API_PATH_FORMAT = "https://{}/api/secrets"
     _PREFIX = "conjur:variable:"
 
     def __init__(self, auth, secrets):
@@ -43,7 +40,7 @@ class GetSecrets(ArkApiCall):
         verify(secrets, "list", "secrets must be list")
         for secret in secrets:
             verify(secret, "str", "secret must be str")
-        _api_path = self._API_PATH_FORMAT.format(auth.token.subdomain)
+        _api_path = self._API_PATH_FORMAT.format(auth.token.endpoint)
         variable_ids_list = [
             self._PREFIX + secret
             for secret in secrets

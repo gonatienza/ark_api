@@ -14,7 +14,7 @@ class ConjurToken(ArkToken):
     def __init__(self):
         """
         Following attributes required:
-        _subdomain
+        _endpoint
         _response
         """
         self._access_token = Secret(self._response.text())
@@ -35,8 +35,8 @@ class ConjurToken(ArkToken):
         return True
 
     @property
-    def subdomain(self):
-        return self._subdomain
+    def endpoint(self):
+        return self._endpoint
 
     @property
     def access_token(self):

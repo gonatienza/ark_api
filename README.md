@@ -114,6 +114,7 @@ username = input('Username: ')
 password = Secret(
     getpass(f'{username} Password: ')
 )
+endpoint = f'{subdomain}.secretsmgr.cyberark.cloud'
 
 # Get Identity App Token and Authorization Object
 scope = 'All'
@@ -131,7 +132,7 @@ rotate_api_key = RotateApiKey(conjur_auth, identifier)
 conjur_api_key_auth = ConjurApiKey(rotate_api_key.response)
 
 # Get Conjur Workload Token and Authorization Object
-conjur_workload_token = ConjurWorkloadToken(conjur_api_key_auth, subdomain, identifier)
+conjur_workload_token = ConjurWorkloadToken(conjur_api_key_auth, endpoint, identifier)
 conjur_workload_auth = ConjurBearer(conjur_workload_token)
 
 # Fetch single secret
@@ -168,6 +169,8 @@ subdomain = input('Subdomain: ')
 token = Secret(
     getpass(f'Token: ')
 )
+endpoint = f'{subdomain}.secretsmgr.cyberark.cloud'
+
 
 # Use JWT Authenticator
 identifier = 'data/workloads/myworkload'
@@ -176,7 +179,7 @@ authenticator = 'conjur_authenticator_name'
 jwt_auth = JwtBearer(jwt_token)
 
 # Get Conjur Workload Token and Authorization Object
-conjur_workload_token = ConjurWorkloadToken(jwt_auth, subdomain, identifier, authenticator)
+conjur_workload_token = ConjurWorkloadToken(jwt_auth, endpoint, identifier, authenticator)
 
 # Get Conjur Authorization Object
 conjur_workload_auth = ConjurBearer(conjur_workload_token)
